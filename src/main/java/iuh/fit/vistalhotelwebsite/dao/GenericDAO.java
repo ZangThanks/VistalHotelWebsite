@@ -1,6 +1,7 @@
 package iuh.fit.vistalhotelwebsite.dao;
 
-import iuh.fit.vistalhotelwebsite.utils.JPAUtil;
+import iuh.fit.vistalhotelwebsite.service.GenericService;
+import iuh.fit.vistalhotelwebsite.util.JPAUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -11,7 +12,7 @@ import jakarta.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class GenericDAO<T, ID> {
+public abstract class GenericDAO<T, ID> implements GenericService<T, ID> {
     protected EntityManager em;
     protected Class<T> clazz;
 
@@ -25,11 +26,13 @@ public abstract class GenericDAO<T, ID> {
         this.clazz = clazz;
     }
 
+    @Override
     public synchronized List<T> getAll() {
         String jpql = "SELECT t FROM " + clazz.getSimpleName() + " t";
         return em.createQuery(jpql, clazz).getResultList();
     }
 
+    @Override
     public synchronized boolean create(T t) {
         EntityTransaction tx = em.getTransaction();
         try {
@@ -44,9 +47,12 @@ public abstract class GenericDAO<T, ID> {
         }
     }
 
+    @Override
     public synchronized T findById(ID id) {
         return em.find(clazz, id);
     }
+
+    @Override
     public synchronized boolean update(T t){
         EntityTransaction tx = em.getTransaction();
         try {
@@ -60,6 +66,8 @@ public abstract class GenericDAO<T, ID> {
             return false;
         }
     }
+
+    @Override
     public synchronized boolean delete(ID id){
         EntityTransaction tx = em.getTransaction();
         try{
@@ -79,6 +87,7 @@ public abstract class GenericDAO<T, ID> {
         return false;
     }
 
+    @Override
     public synchronized List<T> searchByIdAndName(String idField, String nameField,
                                      String idValue, String nameValue) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
@@ -97,8 +106,4 @@ public abstract class GenericDAO<T, ID> {
 
         return em.createQuery(cq).getResultList();
     }
-
-
-
-
 }
