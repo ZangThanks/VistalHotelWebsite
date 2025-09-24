@@ -14,11 +14,13 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString(callSuper = true)
+@AttributeOverride(name = "id", column = @Column(name = "employee_id"))
 @Table(name = "employees")
 public class Employee extends User{
-
+    @Column(columnDefinition = "NVARCHAR(255)")
     private String department;
 
+    @Column(columnDefinition = "NVARCHAR(255)")
     private String position;
 
     private double salary;

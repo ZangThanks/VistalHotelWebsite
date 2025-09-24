@@ -1,4 +1,4 @@
-package iuh.fit.vistalhotelwebsite.model;
+package iuh.fit.vistalhotelwebsite.model.enums;
 
 public enum OrderStatus {
     PLACE("PLACE"),

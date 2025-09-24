@@ -1,15 +1,13 @@
 package iuh.fit.vistalhotelwebsite.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -31,9 +29,13 @@ public class EarlyCheckin {
     @Column(name = "additional_fee")
     private double additionalFee;
 
-    @Column(name = "approve_by")
+    @Column(name = "approve_by", columnDefinition = "NVARCHAR(255)")
     private String approveBy;
 
     @Column(name = "request_date")
     private LocalDateTime requestDate;
+
+    @ManyToOne
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
 }

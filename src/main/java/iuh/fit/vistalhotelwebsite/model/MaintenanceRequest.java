@@ -1,5 +1,7 @@
 package iuh.fit.vistalhotelwebsite.model;
 
+import iuh.fit.vistalhotelwebsite.model.enums.Prioty;
+import iuh.fit.vistalhotelwebsite.model.enums.RequestStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,7 +24,7 @@ public class MaintenanceRequest {
     @Column(name = "request_date")
     private LocalDateTime requestDate;
 
-
+    @Column(columnDefinition = "NVARCHAR(255)")
     private String description;
 
     @Enumerated(EnumType.STRING)
@@ -42,4 +44,8 @@ public class MaintenanceRequest {
 
     @Column(name = "actual_cost")
     private double actualCost;
+
+    @ManyToOne
+    @JoinColumn(name = "booking_id")
+    private Booking booking;
 }

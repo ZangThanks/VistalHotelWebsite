@@ -1,5 +1,6 @@
 package iuh.fit.vistalhotelwebsite.model;
 
+import iuh.fit.vistalhotelwebsite.model.enums.ServiceCategory;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,6 +25,7 @@ public class Service {
 
     private boolean availability;
 
+    @Column(name = "service_hours")
     private String serviceHours;
 
     @Enumerated(EnumType.STRING)
