@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
+<link href="assets/css/global.css" rel="stylesheet">
 <footer class="luxury-footer gold-theme">
     <div class="footer-content">
         <div class="footer-section about">
@@ -50,7 +50,7 @@
 
     <div class="footer-bottom">
         <div class="copyright">
-            <p>&copy; 2023 Vista Hotel. All rights reserved.</p>
+            <p>&copy; 2025 Vista Hotel. All rights reserved.</p>
         </div>
         <div class="footer-links">
             <a href="#">Privacy Policy</a>

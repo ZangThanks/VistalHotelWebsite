@@ -1,3 +1,13 @@
+
+:root {
+    --color-black: #000000;
+    --color-white: #ffffff;
+    --color-gold: #CCBDA3;
+    --color-cream: #f5f5dc;
+    --radius-sm: 6px;
+    --transition: all 0.3s ease;
+}
+
 /*Footer*/
 .luxury-footer {
     background-color: var(--color-black);
@@ -210,7 +220,6 @@
     }
 }
 
-/* Main content adjustment to fit footer */
 .main-content {
     display: flex;
     flex-direction: column;
@@ -221,7 +230,7 @@
     flex-grow: 1;
 }
 
-/* Gold-themed Footer Styles */
+
 .luxury-footer.gold-theme {
     background-color: #CCBDA3;
     color: #000000;
