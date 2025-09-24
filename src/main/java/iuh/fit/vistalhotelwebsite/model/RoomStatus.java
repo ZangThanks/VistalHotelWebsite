@@ -8,12 +8,8 @@ public enum RoomStatus {
 
     private String roomStatus;
 
-    private RoomStatus(String roomStatus) {
+    RoomStatus(String roomStatus) {
         this.roomStatus = roomStatus;
-    }
-
-    public String getRoomStatus() {
-        return roomStatus;
     }
 
     @Override

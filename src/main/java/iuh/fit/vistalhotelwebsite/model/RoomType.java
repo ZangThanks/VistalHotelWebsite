@@ -33,12 +33,16 @@ public class RoomType {
     //Tiện nghi (máy lạnh, nước nóng, ...)
     private List<String> amenties;
 
+    @Column(name = "base_price")
     private double basePrice;
 
     private List<Objects> images;
 
     @ToString.Exclude
-    @ManyToOne
-    @JoinColumn(name = "room_number")
+    @OneToMany(mappedBy = "room")
     private List<Room> rooms;
+
+    @ToString.Exclude
+    @OneToMany(mappedBy = "promotion")
+    private List<RoomTypePromotion> roomTypePromotions;
 }
