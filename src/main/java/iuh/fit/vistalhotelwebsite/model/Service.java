@@ -1,5 +1,6 @@
 package iuh.fit.vistalhotelwebsite.model;
 
+import iuh.fit.vistalhotelwebsite.model.enums.ServiceCategory;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

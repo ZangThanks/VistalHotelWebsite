@@ -1,4 +1,4 @@
-package iuh.fit.vistalhotelwebsite.model;
+package iuh.fit.vistalhotelwebsite.model.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
