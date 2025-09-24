@@ -1,29 +1,26 @@
 package iuh.fit.vistalhotelwebsite.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.time.LocalDate;
+
+@Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
 @Table(name = "room_type_promotions")
 public class RoomTypePromotion {
 
     @Id
-    @Column(name = "room_type_id")
-    private String roomTypeID;
+    @ManyToOne
+    @JoinColumn(name = "room_type_id")
+    private RoomType roomType;
 
     @Id
-    @Column(name = "promotion_id")
-    private String promotionID;
+    @ManyToOne
+    @JoinColumn(name = "promotion_id")
+    private Promotion promotion;
 
     @Column(name = "discount_value")
     private double discountValue;
@@ -33,4 +30,12 @@ public class RoomTypePromotion {
 
     @Column(name = "end_date")
     private LocalDate endDate;
+
+    @EqualsAndHashCode
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class RoomTypePromotionId {
+        private Promotion promotion;
+        private RoomType roomType;
+    }
 }

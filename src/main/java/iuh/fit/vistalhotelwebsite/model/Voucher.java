@@ -1,15 +1,13 @@
 package iuh.fit.vistalhotelwebsite.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -41,4 +39,8 @@ public class Voucher {
 
     @Column(name = "is_active")
     private boolean isActive;
+
+    @ToString.Exclude
+    @OneToMany(mappedBy = "vouchers")
+    private List<CustomerVoucher> customerVouchers;
 }

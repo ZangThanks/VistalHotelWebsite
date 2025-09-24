@@ -8,9 +8,11 @@ public enum ReportType {
     MAINTENANCE("MAINTENANCE");
 
     private String reportType;
+
     public String getReportType() {
         return reportType;
     }
+
     private ReportType(String reportType) {
         this.reportType = reportType;
     }

@@ -1,9 +1,6 @@
 package iuh.fit.vistalhotelwebsite.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,6 +17,7 @@ public class Report {
     @Column(name = "report_id")
     private String reportID;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "report_type")
     private ReportType reportType;
 
@@ -28,4 +26,8 @@ public class Report {
 
     @Column(name = "report_period")
     private String reportPeriod;
+
+    @ManyToOne
+    @JoinColumn(name = "employee_id")
+    private Employee employee;
 }

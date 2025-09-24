@@ -10,11 +10,11 @@ import lombok.ToString;
 
 import java.util.List;
 
-//@Entity
+@Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
+@ToString(callSuper = true)
 @Table(name = "admins")
 public class Admin extends User{
 

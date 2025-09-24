@@ -10,9 +10,9 @@ import lombok.ToString;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Table(name = "users")
-public class User {
+public abstract class User {
     @Id
     @Column(name = "user_id")
     private String userID;

@@ -4,13 +4,16 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@ToString(callSuper = true)
 @Table(name = "customers")
 public class Customer extends User{
 
@@ -27,5 +30,11 @@ public class Customer extends User{
     @Enumerated(EnumType.STRING)
     private MemberShipLevel memberShipLevel;
 
+    @ToString.Exclude
+    @OneToMany(mappedBy = "customer")
+    private List<CustomerVoucher> customerVouchers;
 
+    @ToString.Exclude
+    @OneToMany(mappedBy = "customer")
+    private List<Booking> bookings;
 }

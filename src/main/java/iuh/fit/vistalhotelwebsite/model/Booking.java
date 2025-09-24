@@ -53,4 +53,8 @@ public class Booking {
 
     @Column(name = "totalCost")
     private double totalCost;
+
+    @ManyToOne
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
 }
