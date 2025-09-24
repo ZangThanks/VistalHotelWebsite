@@ -1,4 +1,4 @@
-package iuh.fit.vistalhotelwebsite.model;
+package iuh.fit.vistalhotelwebsite.model.enums;
 
 public enum ReportType {
     REVENUE("REVENUE"),

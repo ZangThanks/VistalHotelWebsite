@@ -1,4 +1,4 @@
-package iuh.fit.vistalhotelwebsite.model;
+package iuh.fit.vistalhotelwebsite.model.enums;
 
 public enum UserRole {
     ADMIN("Admin"), EMPLOYEE("Employee"), CUSTOMER("Customer"), GUEST("Guest");
