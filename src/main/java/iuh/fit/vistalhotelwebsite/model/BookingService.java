@@ -11,17 +11,18 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@IdClass(BookingService.BookingServiceId.class)
 @Table(name = "booking_services")
 public class BookingService {
     @Id
-//    @ManyToOne
-//    @JoinColumn(name = "service_id")
+    @ManyToOne
+    @JoinColumn(name = "service_id")
     private Service service;
 
     @Id
-    //    @ManyToOne
-//    @JoinColumn(name = "booking_id")
-//    private Booking booking;
+    @ManyToOne
+    @JoinColumn(name = "booking_id")
+    private Booking booking;
 
     @Column(name = "service_price")
     private double servicePrice;
@@ -36,6 +37,6 @@ public class BookingService {
     @NoArgsConstructor
     public static class BookingServiceId {
         private Service service;
-//        private Booking booking;
+        private Booking booking;
     }
 }
