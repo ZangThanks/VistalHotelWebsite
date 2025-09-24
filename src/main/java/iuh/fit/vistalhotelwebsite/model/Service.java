@@ -24,6 +24,7 @@ public class Service {
 
     private boolean availability;
 
+    @Column(name = "service_hours")
     private String serviceHours;
 
     @Enumerated(EnumType.STRING)

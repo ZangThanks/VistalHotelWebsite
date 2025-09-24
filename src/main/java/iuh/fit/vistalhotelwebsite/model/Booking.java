@@ -4,8 +4,10 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Data
@@ -26,9 +28,10 @@ public class Booking {
     @Column(name = "number_of_guests")
     private int numberOfGuests;
 
+    @Enumerated(EnumType.STRING)
     private BookingStatus status;
 
-    @Column(name = "special_requests")
+    @Column(name = "special_requests", columnDefinition = "NVARCHAR(255)")
     private String specialRequests;
 
     @Column(name = "booking_date")
@@ -51,10 +54,18 @@ public class Booking {
     @Enumerated(EnumType.STRING)
     private PaymentStatus paymentStatus;
 
-    @Column(name = "totalCost")
+    @Column(name = "total_cost")
     private double totalCost;
 
     @ManyToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;
+
+    @ToString.Exclude
+    @OneToMany(mappedBy = "booking")
+    private List<BookingDetail> bookingDetails;
+
+    @ToString.Exclude
+    @OneToMany(mappedBy = "booking")
+    private List<MaintenanceRequest> maintenanceRequests;
 }

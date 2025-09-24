@@ -10,10 +10,11 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-@NoArgsConstructor
-@AllArgsConstructor
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @ToString(callSuper = true)
+@AttributeOverride(name = "id", column = @Column(name = "customer_id"))
 @Table(name = "customers")
 public class Customer extends User{
 
@@ -37,4 +38,8 @@ public class Customer extends User{
     @ToString.Exclude
     @OneToMany(mappedBy = "customer")
     private List<Booking> bookings;
+
+    @ToString.Exclude
+    @OneToMany(mappedBy = "customer")
+    private List<EarlyCheckin> earlyCheckin;
 }

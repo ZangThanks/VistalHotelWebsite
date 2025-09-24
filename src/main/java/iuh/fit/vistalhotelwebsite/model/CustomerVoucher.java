@@ -20,10 +20,6 @@ public class CustomerVoucher {
     @JoinColumn(name = "vouchers_id")
     private Voucher voucher;
 
-    @Id
-    @Column(name = "voucher_id")
-    private String voucherID;
-
     private boolean state;
 
     @EqualsAndHashCode

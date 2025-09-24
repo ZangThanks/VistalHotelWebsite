@@ -1,10 +1,9 @@
 package iuh.fit.vistalhotelwebsite.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import java.util.List;
 
 @Entity
 @Data
@@ -26,10 +25,15 @@ public class BookingDetail {
     @Column(name = "room_price")
     private double roomPrice;
 
+    @ToString.Exclude
+    @OneToOne
+    @JoinColumn(name = "review_id")
+    private Review review;
+
     @EqualsAndHashCode
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class BookingDetailId {
+    public class BookingDetailId {
         private Room room;
         private Booking booking;
     }

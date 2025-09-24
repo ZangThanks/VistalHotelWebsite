@@ -16,7 +16,7 @@ import java.util.List;
 @Table(name = "rooms")
 public class Room {
     @Id
-    @Column(name = "room_number")
+    @Column(name = "room_number", insertable=false, updatable=false)
     private String roomNumber;
 
     private int floor;

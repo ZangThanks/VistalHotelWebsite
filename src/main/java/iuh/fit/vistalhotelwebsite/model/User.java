@@ -6,25 +6,27 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-@Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@Table(name = "users")
+@MappedSuperclass
 public abstract class User {
     @Id
-    @Column(name = "user_id")
-    private String userID;
+    private String id;
 
-    @Column(name = "username")
+    @Column(name = "user_name", columnDefinition = "NVARCHAR(255)")
     private String userName;
+
     private String password;
+
     private String email;
+
     private String phone;
 
-    @Column(name = "full_name")
+    @Column(name = "full_name", columnDefinition = "NVARCHAR(255)")
     private String fullName;
+
+    @Column(columnDefinition = "NVARCHAR(255)")
     private String address;
 
     @Enumerated(EnumType.STRING)

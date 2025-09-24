@@ -1,9 +1,6 @@
 package iuh.fit.vistalhotelwebsite.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -36,6 +33,7 @@ public class Review {
     @Column(name = "value_for_money")
     private int valueForMoney;
 
+    @Column(columnDefinition = "NVARCHAR(255)")
     private String comment;
 
     @Column(name = "review_date")
@@ -44,5 +42,11 @@ public class Review {
     @Column(name = "is_anonymous")
     private boolean isAnonymous;
 
-    private List<Object> images;
+    @ElementCollection
+    @CollectionTable(name = "review_images", joinColumns = @JoinColumn(name = "review_id"))
+    @Column(name = "images_url")
+    private List<String> images;
+
+    @OneToOne(mappedBy = "review")
+    private BookingDetail bookingDetail;
 }

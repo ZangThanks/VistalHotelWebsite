@@ -18,12 +18,13 @@ public class Promotion {
     @Column(name = "promotion_id")
     private String promotionID;
 
-    @Column(name = "promotion_name")
+    @Column(name = "promotion_name", columnDefinition = "NVARCHAR(255)")
     private String promotionName;
 
+    @Column(columnDefinition = "NVARCHAR(255)")
     private String description;
 
-    @Column(name = "discount_type")
+    @Column(name = "discount_type", columnDefinition = "NVARCHAR(255)")
     private String discountType;
 
     @Column(name = "is_active")

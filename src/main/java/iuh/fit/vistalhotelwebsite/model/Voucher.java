@@ -19,7 +19,7 @@ public class Voucher {
     @Column(name = "voucher_id")
     private String voucherID;
 
-    @Column(name = "voucher_name")
+    @Column(name = "voucher_name", columnDefinition = "NVARCHAR(255)")
     private String voucherName;
 
     @Column(name = "discount_percentage")
@@ -41,6 +41,6 @@ public class Voucher {
     private boolean isActive;
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "vouchers")
+    @OneToMany(mappedBy = "voucher")
     private List<CustomerVoucher> customerVouchers;
 }

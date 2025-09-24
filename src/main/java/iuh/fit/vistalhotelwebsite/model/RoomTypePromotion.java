@@ -11,7 +11,6 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Table(name = "room_type_promotions")
 public class RoomTypePromotion {
-
     @Id
     @ManyToOne
     @JoinColumn(name = "room_type_id")
