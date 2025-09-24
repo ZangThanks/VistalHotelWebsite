@@ -8,7 +8,6 @@ import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Data
@@ -17,7 +16,7 @@ import java.util.Objects;
 @Table(name = "rooms")
 public class Room {
     @Id
-    @Column(name = "room_number")
+    @Column(name = "room_number", insertable=false, updatable=false)
     private String roomNumber;
 
     private int floor;
@@ -31,6 +30,11 @@ public class Room {
     private String notes;
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "rooms")
+    @ManyToOne
+    @JoinColumn(name = "room_number")
     private RoomType roomType;
+
+    @ToString.Exclude
+    @OneToMany(mappedBy = "room")
+    private List<BookingDetail> bookingDetails;
 }
