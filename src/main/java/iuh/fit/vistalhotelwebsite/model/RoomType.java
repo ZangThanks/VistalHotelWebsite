@@ -31,14 +31,24 @@ public class RoomType {
     private int maxOccupancy;
 
     //Tiện nghi (máy lạnh, nước nóng, ...)
+    @ElementCollection
+    @CollectionTable(name = "room_type_amenties", joinColumns = @JoinColumn(name = "room_type_id"))
+    @Column(columnDefinition = "NVARCHAR(255)")
     private List<String> amenties;
 
+    @Column(name = "base_price")
     private double basePrice;
 
-    private List<Objects> images;
+    @ElementCollection
+    @CollectionTable(name = "room_type_images", joinColumns = @JoinColumn(name = "room_type_id"))
+    @Column(name = "images_url")
+    private List<String> images;
 
     @ToString.Exclude
-    @ManyToOne
-    @JoinColumn(name = "room_number")
+    @OneToMany(mappedBy = "roomType")
     private List<Room> rooms;
+
+    @ToString.Exclude
+    @OneToMany(mappedBy = "roomType")
+    private List<RoomTypePromotion> roomTypePromotions;
 }
