@@ -23,4 +23,8 @@ public class Admin extends User{
     @ElementCollection
     @CollectionTable(name = "admin_permissions", joinColumns = @JoinColumn(name = "user_id"))
     private List<String> permissions;
+
+    @ToString.Exclude
+    @OneToMany(mappedBy = "admin")
+    private List<Promotion> promotions;
 }
