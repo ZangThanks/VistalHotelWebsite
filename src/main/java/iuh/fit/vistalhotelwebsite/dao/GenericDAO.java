@@ -1,6 +1,6 @@
 package iuh.fit.vistalhotelwebsite.dao;
 
-import iuh.fit.vistalhotelwebsite.utils.JPAUtil;
+import iuh.fit.vistalhotelwebsite.util.JPAUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.criteria.CriteriaBuilder;
