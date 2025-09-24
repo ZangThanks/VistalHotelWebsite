@@ -30,6 +30,10 @@ public class Promotion {
     @Column(name = "is_active")
     private boolean isActive;
 
+    @ManyToOne
+    @JoinColumn(name = "admin_id")
+    private Admin admin;
+
     @ToString.Exclude
     @OneToMany(mappedBy = "promotion")
     private List<RoomTypePromotion> roomTypePromotions;

@@ -31,4 +31,8 @@ public class Employee extends User{
     @ToString.Exclude
     @OneToMany(mappedBy = "employee")
     private List<Report> reports;
+
+    @ToString.Exclude
+    @OneToMany(mappedBy = "employee")
+    private List<Booking> bookings;
 }
