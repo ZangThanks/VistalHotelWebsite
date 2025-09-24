@@ -63,6 +63,10 @@ public class Booking {
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
+    @ManyToOne
+    @JoinColumn(name = "employee_id")
+    private Employee employee;
+
     @ToString.Exclude
     @OneToMany(mappedBy = "booking")
     private List<BookingDetail> bookingDetails;
