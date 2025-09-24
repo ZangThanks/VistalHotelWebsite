@@ -7,8 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Data
@@ -31,6 +29,7 @@ public class Room {
     private String notes;
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "rooms")
+    @ManyToOne
+    @JoinColumn(name = "room_number")
     private RoomType roomType;
 }

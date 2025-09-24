@@ -38,7 +38,6 @@ public class RoomType {
     private List<Objects> images;
 
     @ToString.Exclude
-    @ManyToOne
-    @JoinColumn(name = "room_number")
+    @OneToMany(mappedBy = "rooms")
     private List<Room> rooms;
 }
