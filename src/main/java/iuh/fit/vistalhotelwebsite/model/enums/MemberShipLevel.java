@@ -10,9 +10,6 @@ import lombok.ToString;
 @Getter
 @ToString
 public enum MemberShipLevel {
-    BRONZE("Bronze"), SILVER("Silver"), GOLD("Gold"), PLATINUM("Platinum");
+    BRONZE("Bronze123"), SILVER("Silver"), GOLD("Gold"), PLATINUM("Platinum");
     private String level;
-
-
-
 }
