@@ -5,6 +5,6 @@
     <title>JSP - Hello World</title>
 </head>
 <body>
-<%@include file="views/layout/footer.jsp" %>
+<%@include file="views/layout/header.jsp" %>
 </body>
 </html>
