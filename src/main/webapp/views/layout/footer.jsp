@@ -1,4 +1,3 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <link href="assets/css/global.css" rel="stylesheet">
 <footer class="luxury-footer gold-theme">
     <div class="footer-content">
