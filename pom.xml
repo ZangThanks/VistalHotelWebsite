@@ -78,6 +78,13 @@
             <artifactId>lombok</artifactId>
             <version>1.18.40</version>
         </dependency>
+
+        <!-- Password hashing -->
+        <dependency>
+            <groupId>org.mindrot</groupId>
+            <artifactId>jbcrypt</artifactId>
+            <version>0.4</version>
+        </dependency>
     </dependencies>
 
     <build>

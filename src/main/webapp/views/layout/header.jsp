@@ -5,7 +5,7 @@
   Time: 3:49 PM
   To change this template use File | Settings | File Templates.
 --%>
-<link href="assets/css/output.css" rel="stylesheet">
+<link href="${pageContext.request.contextPath}/assets/css/output.css" rel="stylesheet">
 <div class="relative flex items-center px-4 py-2 bg-[#F5F0EB] shadow">
 
     <img src="assets/images/logo.png" alt="Company Logo"
