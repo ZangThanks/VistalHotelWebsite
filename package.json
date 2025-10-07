@@ -26,6 +26,7 @@
     "tailwindcss": "^3.4.14"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^7.1.0",
     "baseline-browser-mapping": "^2.8.6",
     "browserslist": "^4.26.2",
     "caniuse-lite": "^1.0.30001743",
