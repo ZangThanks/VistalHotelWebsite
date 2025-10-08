@@ -1,0 +1,53 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+.input-field:focus + .floating-label,
+.input-field:not(:placeholder-shown) + .floating-label {
+    transform: translateY(-1.75rem);
+    font-size: 0.75rem;
+    color: #d4af6a;
+}
+
+.input-field.error + .floating-label {
+    color: #ef4444;
+}
+
+/* Remove autofill background and styles */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px transparent inset !important;
+    -webkit-text-fill-color: white !important;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+/* Force remove all borders and outlines */
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+input:focus {
+    box-shadow: none !important;
+}
+
+/* Hide scrollbar but keep functionality */
+.scroll-content::-webkit-scrollbar {
+    width: 3px;
+}
+
+.scroll-content::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.scroll-content::-webkit-scrollbar-thumb {
+    background: rgba(212, 175, 106, 0.2);
+    border-radius: 10px;
+}

@@ -14,6 +14,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/assets/images/logo.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/auth.css">
     <script>
         tailwind.config = {
             theme: {
@@ -25,61 +26,6 @@
             }
         }
     </script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
-
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-
-        .input-field:focus + .floating-label,
-        .input-field:not(:placeholder-shown) + .floating-label {
-            transform: translateY(-1.75rem);
-            font-size: 0.75rem;
-            color: #d4af6a;
-        }
-
-        .input-field.error + .floating-label {
-            color: #ef4444;
-        }
-
-        /* Remove autofill background and styles */
-        input:-webkit-autofill,
-        input:-webkit-autofill:hover,
-        input:-webkit-autofill:focus,
-        input:-webkit-autofill:active {
-            -webkit-box-shadow: 0 0 0 30px transparent inset !important;
-            -webkit-text-fill-color: white !important;
-            transition: background-color 5000s ease-in-out 0s;
-        }
-
-        /* Force remove all borders and outlines */
-        input[type="text"],
-        input[type="email"],
-        input[type="password"] {
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
-        }
-
-        input:focus {
-            box-shadow: none !important;
-        }
-
-        /* Hide scrollbar but keep functionality */
-        .scroll-content::-webkit-scrollbar {
-            width: 3px;
-        }
-
-        .scroll-content::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        .scroll-content::-webkit-scrollbar-thumb {
-            background: rgba(212, 175, 106, 0.2);
-            border-radius: 10px;
-        }
-    </style>
 </head>
 <body class="min-h-screen bg-cover bg-center bg-no-repeat flex items-center justify-center relative"
       style="background-image: url('${pageContext.request.contextPath}/assets/images/resort-bg.png');">
@@ -101,7 +47,7 @@
             <p class="text-gray-400 text-sm">Chào mừng bạn trở lại với Vista Hotel</p>
         </div>
 
-        <form action="${pageContext.request.contextPath}/login" method="post" id="loginForm">
+        <form action="${pageContext.request.contextPath}/login" method="post" id="loginForm" >
             <!-- Email -->
             <div class="relative mb-6">
                 <i class="fa-regular fa-envelope absolute left-0 top-[8px] text-white/50 text-sm"></i>
@@ -132,6 +78,9 @@
                 <i class="far fa-eye absolute right-0 top-2 text-white/50 hover:text-white/80 cursor-pointer transition-colors"
                    onclick="togglePassword('password', this)"></i>
                 <span class="text-red-400 text-xs mt-1 block min-h-[18px]" id="passwordError"></span>
+                <div class="mt-2 text-right">
+                    <a href="#" class="text-sm text-gold hover:underline">Quên mật khẩu?</a>
+                </div>
             </div>
 
             <!-- Submit Button -->
@@ -213,49 +162,27 @@
         }
     }
 
-    // Form validation
-    document.getElementById('registerForm').addEventListener('submit', function(e) {
-        e.preventDefault();
+    // Form validation (login)
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
         clearErrors();
 
         let isValid = true;
 
-        const fullName = document.getElementById('fullName');
-        if (fullName.value.trim() === '') {
-            showError('fullName', 'Vui lòng nhập họ và tên');
-            isValid = false;
-        }
-
         const email = document.getElementById('email');
         if (email.value.trim() === '') {
-            showError('email', 'Vui lòng nhập email hoặc số điện thoại');
-            isValid = false;
-        } else if (!isValidEmail(email.value) && !isValidPhone(email.value)) {
-            showError('email', 'Email hoặc số điện thoại không hợp lệ');
+            e.preventDefault();
+            showError('email', 'Vui lòng nhập email/số điện thoại/tên đăng nhập');
             isValid = false;
         }
 
         const password = document.getElementById('password');
         if (password.value.trim() === '') {
+            e.preventDefault();
             showError('password', 'Vui lòng nhập mật khẩu');
             isValid = false;
-        } else if (password.value.length < 6) {
-            showError('password', 'Mật khẩu phải có ít nhất 6 ký tự');
-            isValid = false;
         }
 
-        const confirmPassword = document.getElementById('confirmPassword');
-        if (confirmPassword.value.trim() === '') {
-            showError('confirmPassword', 'Vui lòng xác nhận mật khẩu');
-            isValid = false;
-        } else if (password.value !== confirmPassword.value) {
-            showError('confirmPassword', 'Mật khẩu không khớp');
-            isValid = false;
-        }
-
-        if (isValid) {
-            this.submit();
-        }
+        if (!isValid) return;
     });
 
     function showError(fieldId, message) {
@@ -281,7 +208,7 @@
     }
 
     function isValidPhone(phone) {
-        return /^[0-9]{10,11}$/.test(phone);
+        return /^[0-9]{9,12}$/.test(phone);
     }
 
     // Clear error when user starts typing
