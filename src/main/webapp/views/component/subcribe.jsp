@@ -6,7 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<!-- Newsletter -->
+<link href="assets/css/tailwind.output.css" rel="stylesheet">
 <div class="col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-5">
     <div class=" border-gray-300 mt-8 pt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between">
         <p class="text-sm mb-3 sm:mb-0">Stay updated with our latest news and special offers</p>
