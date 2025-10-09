@@ -5,105 +5,117 @@
   Time: 3:20 PM
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Home JSP with Tailwind</title>
+    <title>Home</title>
     <!-- Tailwind qua CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <%--    <script src="https://cdn.tailwindcss.com"></script>--%>
+    <link href="assets/css/output.css" rel="stylesheet">
 </head>
-<body class="bg-gray-100 flex flex-col items-center">
 
+<body class="bg-gray-100  items-center">
+<%@include file="/views/component/header.jsp" %>
 <!-- Header Section -->
 <div class="flex justify-center items-center w-full h-screen relative">
-    <!-- Left Image -->
-    <div class="w-1/4 h-5/6 opacity-100 transition-all">
-        <img src="https://res.cloudinary.com/dnbc9k0yn/image/upload/v1748876683/Betterimage.ai_1745318839409_peiven.jpg"
-             alt="Left Bag"
-             class="object-cover w-full h-full"/>
-    </div>
+
 
     <!-- Video -->
-    <div class="w-1/2 h-5/6 relative flex justify-center items-center">
-        <video src="https://res.cloudinary.com/dnbc9k0yn/video/upload/v1748876712/0415_vamwju.mp4"
+    <div class="w-screen h-screen relative flex justify-center items-center">
+        <video src="https://res.cloudinary.com/dyccrebqj/video/upload/v1758708870/0924_te7gqq.mp4"
                autoplay muted loop playsinline
-               class="object-cover w-full h-full"></video>
+               class="absolute top-0 left-0 w-full h-full object-cover"></video>
 
-        <!-- Overlay text -->
-        <div class="absolute flex flex-col items-center justify-center text-white">
-            <h1 class="text-4xl md:text-5xl lg:text-6xl font-serif mb-4">
-                Mother's Day Gifts
-            </h1>
-            <a href="productPage.jsp"
-               class="mt-4 inline-block text-center border-b border-white hover:border-opacity-70 transition-all duration-300 text-sm md:text-base tracking-wider">
-                Discover
-            </a>
-        </div>
+        <%--        <!-- Overlay text -->--%>
+        <%--        <div class="absolute flex flex-col items-center justify-center text-white">--%>
+        <%--            <h1 class="text-4xl md:text-5xl lg:text-6xl font-serif mb-4">--%>
+        <%--                Mother's Day Gifts--%>
+        <%--            </h1>--%>
+        <%--            <a href="productPage.jsp"--%>
+        <%--               class="mt-4 inline-block text-center border-b border-white hover:border-opacity-70 transition-all duration-300 text-sm md:text-base tracking-wider">--%>
+        <%--                Discover--%>
+        <%--            </a>--%>
+        <%--        </div>--%>
+
     </div>
 
-    <!-- Right Image -->
-    <div class="w-1/4 h-5/6 opacity-100 transition-all">
-        <img src="https://res.cloudinary.com/dnbc9k0yn/image/upload/v1748876684/Betterimage.ai_1745318813398_kcm7fl.jpg"
-             alt="Right Bag"
-             class="object-cover w-full h-full"/>
-    </div>
 </div>
 
 <!-- Text Section -->
 <div class="mt-10 text-center">
-    <h2 class="text-xl w-1/2 mx-auto text-gray-600 tracking-wide font-medium font-serif">
-        Tỏa sáng khác biệt, định đoạt phong cách
+    <h2 class="text-xl max-w-3xl mx-auto text-gray-600 tracking-wide font-medium font-serif">
+        The Art of Luxury, The Science of Service
     </h2>
+    <hr class="mt-3 mx-auto w-full md:w-1/2 border border-grey-500">
 </div>
 
-<!-- Men / Women Fashion -->
-<div class="flex flex-row items-center mt-20 gap-6">
-    <!-- Men -->
-    <div class="relative group overflow-hidden w-[28vw] h-[86vh]">
-        <img src="https://res.cloudinary.com/dnbc9k0yn/image/upload/v1748876329/DIOR-2023-SS-MENS-COLLECTION_26_erorfs.jpg"
-             alt="Men fashion"
+
+<!-- Hotel Introduction -->
+<div class="flex flex-row items-center mt-20 gap-6 justify-center">
+
+    <div class="relative group overflow-hidden w-[30vw] h-[80vh]">
+        <img src="https://res.cloudinary.com/dk8gvar3y/image/upload/v1759815555/snapedit_1759815339900_appzzr.jpg"
+             alt="Luxury Yacht Landscape with Burj Al Arab"
              class="object-cover w-full h-full"/>
-        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
-        <a href="productPage.jsp?sex=Nam"
-           class="absolute inset-0 flex flex-col items-center justify-end pb-16 text-white font-serif">
-            <span class="text-5xl font-bold drop-shadow-lg">Men Fashion</span>
-            <div class="mt-4 px-6 py-2 text-2xl tracking-widest relative group-hover:text-gray-200 transition">
-                Explore
-                <span class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-[1px] bg-white transition-all duration-500 group-hover:w-full"></span>
-            </div>
-        </a>
+        <div class="absolute inset-x-0 bottom-0 text-white p-4 pt-16 bg-gradient-to-t from-black/70 to-transparent">
+            <h3 class="text-3xl font-serif font-bold drop-shadow-lg mb-2">Landscape</h3>
+            <p class="text-base font-light font-sans leading-relaxed">
+                Where all limits fade, leaving only the beauty of creation and the generosity of the human spirit
+            </p>
+        </div>
     </div>
-
-    <!-- Women -->
-    <div class="relative group overflow-hidden w-[28vw] h-[86vh]">
-        <img src="https://res.cloudinary.com/dnbc9k0yn/image/upload/v1748876514/_ONA0428_fc2gek.jpg"
-             alt="Women fashion"
+    <div class="relative group overflow-hidden w-[30vw] h-[80vh]">
+        <img src="https://res.cloudinary.com/dk8gvar3y/image/upload/v1759815555/snapedit_1759815323646_jjezbb.jpg"
+             alt="Grand Interior Architecture"
              class="object-cover w-full h-full"/>
-        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
-        <a href="productPage.jsp?sex=Nữ"
-           class="absolute inset-0 flex flex-col items-center justify-end pb-16 text-white font-serif">
-            <span class="text-5xl font-bold drop-shadow-lg">Women Fashion</span>
-            <div class="mt-4 px-6 py-2 text-2xl tracking-widest relative group-hover:text-gray-200 transition">
-                Explore
-                <span class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-[1px] bg-white transition-all duration-500 group-hover:w-full"></span>
-            </div>
-        </a>
+
+        <div class="absolute inset-x-0 bottom-0  text-white p-4 pt-16 bg-gradient-to-t from-black/70 to-transparent">
+            <h3 class="text-3xl font-serif font-bold drop-shadow-lg mb-2">Architecture</h3>
+            <p class="text-base font-light font-sans leading-relaxed">
+                A Manifesto of Pride and Creativity Reaching for the Endless Blue Ocean Horizon
+            </p>
+        </div>
+    </div>
+    <div class="relative group overflow-hidden w-[30vw] h-[80vh]">
+        <img src="https://res.cloudinary.com/dk8gvar3y/image/upload/v1759815555/snapedit_1759815210477_hyr5me.jpg"
+             alt="Underwater Dining Amenity"
+             class="object-cover w-full h-full"/>
+
+        <div class="absolute inset-x-0 bottom-0 text-white p-4 pt-16 bg-gradient-to-t from-black/70 to-transparent">
+            <h3 class="text-3xl font-serif font-bold drop-shadow-lg mb-2">Amenity</h3>
+            <p class="text-base font-light font-sans leading-relaxed">
+                Embracing the ocean, losing yourself in the water, and living in the moment
+            </p>
+        </div>
     </div>
 </div>
 
-<!-- Collection Section -->
-<div class="mt-20 text-center">
-    <h2 class="text-4xl font-serif tracking-widest font-medium text-gray-800">
-        Bộ Sưu Tập Xuân Hè 2025
-    </h2>
-    <p class="text-gray-600">Biểu tượng phong cách đương đại</p>
-</div>
 
-<div class="w-full flex justify-center mt-10">
-    <img src="https://res.cloudinary.com/dnbc9k0yn/image/upload/v1748876563/Betterimage.ai_1744782971571_zkeemo.jpg" alt=""/>
+<div class="relative w-full h-[80vh] flex items-center justify-center mt-10">
+    <!-- Ảnh nền -->
+    <img src="https://res.cloudinary.com/dk8gvar3y/image/upload/v1759816376/BetterImage_1759816379634_xg9wxx.jpg"
+         alt="Retreat"
+         class="w-full h-full object-cover">
+
+    <!-- Overlay mờ + chữ căn giữa -->
+    <div class="absolute inset-0 flex flex-col items-center justify-center bg-black/30 text-white text-center px-4">
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-serif mb-4">
+            Retreat
+        </h1>
+        <p class="text-lg md:text-xl mb-6 font-light">
+            Emotions are soothed, and the soul rests and rejuvenates
+        </p>
+        <jsp:include page="/views/component/serviceButton.jsp">
+            <jsp:param name="text" value="Services" />
+            <jsp:param name="href" value="productPage.jsp" />
+        </jsp:include>
+
+    </div>
 </div>
+<%@include file="/views/component/footer.jsp" %>
+
 
 </body>
 </html>
