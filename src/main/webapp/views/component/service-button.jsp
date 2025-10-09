@@ -6,6 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<link href="assets/css/tailwind.output.css" rel="stylesheet">
 
 <c:set var="text" value="${param.text != null ? param.text : 'Reserve'}" />
 <c:set var="href" value="${param.href != null ? param.href : '#'}" />

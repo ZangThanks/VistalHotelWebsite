@@ -1,7 +1,7 @@
 <%-- Service Card Component --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-
+<link href="assets/css/tailwind.output.css" rel="stylesheet">
 <div class="service-card
             bg-white rounded-xl border border-gray-200 overflow-hidden
             hover:shadow-lg transition-shadow duration-300 m-2">

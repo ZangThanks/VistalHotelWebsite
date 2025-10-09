@@ -7,6 +7,7 @@
 --%>
 <%-- filepath: sidebar.jsp --%>
 <link href="assets/css/global.css" rel="stylesheet">
+<link href="assets/css/tailwind.output.css" rel="stylesheet">
 <aside class="sidebar">
     <div class="sidebar-header">
         <h2>VISTA</h2>

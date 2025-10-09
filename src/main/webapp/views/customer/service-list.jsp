@@ -8,7 +8,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Vista Hotel - Services</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="${pageContext.request.contextPath}/assets/css/tailwind.output.css" rel="stylesheet">
 </head>
 
 <body class="font-sans">
@@ -110,7 +110,7 @@
             </div>
         </div>
     </div>
-
+            <%@include file="/views/component/footer.jsp" %>
 </body>
 
 </html>

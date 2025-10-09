@@ -3,7 +3,8 @@
 <html>
 <head>
     <title>JSP - Hello World</title>
-   </head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
 <body>
 <%--<div class="bg-blue-500 text-white p-4" >Test Tailwind</div>--%>
 <%--<%@include file="views/layout/newsPage.jsp" %>--%>
