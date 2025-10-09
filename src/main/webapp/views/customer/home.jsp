@@ -10,7 +10,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Home - Vista Luxury Hotel</title>
-    <link href="assets/css/tailwind.output.css" rel="stylesheet">
+    <link href="../../assets/css/tailwind.output.css" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
@@ -142,7 +142,7 @@
 
 <!-- Retreat Banner -->
 <section class="relative w-full h-screen overflow-hidden mt-20">
-    <img src="https://res.cloudinary.com/dk8gvar3y/image/upload/v1759816376/BetterImage_1759816379634_xg9wxx.jpg"
+    <img src="https://res.cloudinary.com/dk8gvar3y/image/upload/v1760002659/snapedit_1760002631640_fkoka9.jpg"
          alt="Retreat Experience"
          class="w-full h-full object-cover">
 

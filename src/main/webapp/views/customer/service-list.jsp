@@ -14,7 +14,7 @@
 <body class="font-sans">
             <!-- Hero Banner with fixed background -->
             <div class="relative h-[80vh] bg-cover bg-center bg-fixed"
-                style="background-image: url('https://res.cloudinary.com/dk8gvar3y/image/upload/v1759832040/BetterImage_1759816379634_udrtfl.jpg');">
+                style="background-image: url('https://res.cloudinary.com/dk8gvar3y/image/upload/v1760002659/snapedit_1760002631640_fkoka9.jpg');">
 
             </div>
 
