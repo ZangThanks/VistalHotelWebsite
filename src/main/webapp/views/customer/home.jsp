@@ -10,7 +10,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Home - Vista Luxury Hotel</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="assets/css/tailwind.output.css" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
@@ -218,7 +218,6 @@
         </div>
     </div>
 </section>
-
-
+<%@include file="/views/component/footer.jsp" %>
 </body>
 </html>
