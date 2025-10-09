@@ -9,6 +9,7 @@ import iuh.fit.vistalhotelwebsite.model.Employee;
 import iuh.fit.vistalhotelwebsite.model.User;
 import iuh.fit.vistalhotelwebsite.model.enums.UserRole;
 import iuh.fit.vistalhotelwebsite.util.PasswordUtil;
+import iuh.fit.vistalhotelwebsite.util.ValidationUtil;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -22,9 +23,15 @@ import java.io.IOException;
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
 
+    private AdminDAO adminDAO;
+    private EmployeeDAO employeeDAO;
+    private CustomerDAO customerDAO;
+
     @Override
     public void init(ServletConfig config) throws ServletException {
-        super.init(config);
+        adminDAO = new AdminDAO();
+        employeeDAO = new EmployeeDAO();
+        customerDAO = new CustomerDAO();
     }
 
     @Override
@@ -45,13 +52,13 @@ public class LoginServlet extends HttpServlet {
         if (credential != null) credential = credential.trim();
         if (password != null) password = password.trim();
 
-        if (isNullOrEmpty(credential) || isNullOrEmpty(password)) {
+        if (ValidationUtil.isNullOrEmpty(credential) || ValidationUtil.isNullOrEmpty(password)) {
             forwardError(req, resp, "Vui lòng nhập đầy đủ thông tin đăng nhập");
             return;
         }
 
-        String email = isEmail(credential) ? credential : null;
-        String phone = email == null && isPhone(credential) ? credential : null;
+        String email = ValidationUtil.isValidEmail(credential) ? credential : null;
+        String phone = email == null && ValidationUtil.isValidPhone(credential) ? credential : null;
         String userName = (email == null && phone == null) ? credential : null;
 
         User foundUser = findUser(email, phone, userName);
@@ -78,22 +85,14 @@ public class LoginServlet extends HttpServlet {
         }
     }
 
-    private boolean isNullOrEmpty(String s) {
-        return s == null || s.trim().isEmpty();
-    }
-
-    private boolean isEmail(String input) {
-        return input != null && input.matches("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$");
-    }
-
     private void forwardError(HttpServletRequest req, HttpServletResponse resp, String message) throws ServletException, IOException {
         req.setAttribute("error", message);
         req.getRequestDispatcher("views/auth/login.jsp").forward(req, resp);
     }
 
+    // Find user by email, phone, or username across all roles
     private User findUser(String email, String phone, String userName) {
         // Admin
-        AdminDAO adminDAO = new AdminDAO();
         Admin admin = null;
         if (email != null) admin = adminDAO.findByEmail(email);
         else if (phone != null) admin = adminDAO.findByPhone(phone);
@@ -101,7 +100,6 @@ public class LoginServlet extends HttpServlet {
         if (admin != null) return admin;
 
         // Employee
-        EmployeeDAO employeeDAO = new EmployeeDAO();
         Employee employee = null;
         if (email != null) employee = employeeDAO.findByEmail(email);
         else if (phone != null) employee = employeeDAO.findByPhone(phone);
@@ -109,15 +107,10 @@ public class LoginServlet extends HttpServlet {
         if (employee != null) return employee;
 
         // Customer
-        CustomerDAO customerDAO = new CustomerDAO();
         Customer customer = null;
         if (email != null) customer = customerDAO.findByEmail(email);
         else if (phone != null) customer = customerDAO.findByPhone(phone);
         else if (userName != null) customer = customerDAO.findByUserName(userName);
         return customer;
-    }
-
-    private boolean isPhone(String input) {
-        return input != null && input.matches("^[0-9]{9,12}$");
     }
 }

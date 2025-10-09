@@ -13,6 +13,7 @@ public class AdminDAO extends GenericDAO<Admin, String> {
         super(em, Admin.class);
     }
 
+    // Find admin by email
     public Admin findByEmail(String email) {
         try {
             return em.createQuery("SELECT a FROM Admin a WHERE a.email = :email", Admin.class)
@@ -25,6 +26,7 @@ public class AdminDAO extends GenericDAO<Admin, String> {
         }
     }
 
+    // Find admin by phone
     public Admin findByPhone(String phone) {
         try {
             return em.createQuery("SELECT a FROM Admin a WHERE a.phone = :phone", Admin.class)
@@ -37,6 +39,8 @@ public class AdminDAO extends GenericDAO<Admin, String> {
         }
     }
 
+
+    // Find admin by username
     public Admin findByUserName(String userName) {
         try {
             return em.createQuery("SELECT a FROM Admin a WHERE a.userName = :userName", Admin.class)

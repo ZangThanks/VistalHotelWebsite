@@ -13,6 +13,7 @@ public class EmployeeDAO extends GenericDAO<Employee, String> {
         super(em, Employee.class);
     }
 
+    // Find employee by email
     public Employee findByEmail(String email) {
         try {
             return em.createQuery("SELECT e FROM Employee e WHERE e.email = :email", Employee.class)
@@ -25,6 +26,7 @@ public class EmployeeDAO extends GenericDAO<Employee, String> {
         }
     }
 
+    // Find employee by phone
     public Employee findByPhone(String phone) {
         try {
             return em.createQuery("SELECT e FROM Employee e WHERE e.phone = :phone", Employee.class)
@@ -37,6 +39,7 @@ public class EmployeeDAO extends GenericDAO<Employee, String> {
         }
     }
 
+    // Find employee by username
     public Employee findByUserName(String userName) {
         try {
             return em.createQuery("SELECT e FROM Employee e WHERE e.userName = :userName", Employee.class)

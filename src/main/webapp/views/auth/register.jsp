@@ -15,6 +15,9 @@
     <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/assets/images/logo.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/auth.css">
+    <script src="${pageContext.request.contextPath}/assets/js/validation.js"></script>
+    <script src="${pageContext.request.contextPath}/assets/js/auth.js"></script>
+
     <script>
         tailwind.config = {
             theme: {
@@ -24,18 +27,17 @@
                     }
                 }
             }
-        }
+        };
     </script>
 
 </head>
 <body class="min-h-screen bg-cover bg-center bg-no-repeat flex items-center justify-center relative"
       style="background-image: url('${pageContext.request.contextPath}/assets/images/resort-bg.png');">
 
-
-<!-- Overlay -->
+<%--Overlay--%>
 <div class="absolute inset-0 bg-black/50"></div>
 
-<!-- Main Card -->
+<%--Main Card--%>
 <div class="relative z-10 bg-slate-500/25 backdrop-blur-[15px] rounded-3xl shadow-2xl w-full max-w-[570px] mx-4 max-h-[95vh] flex flex-col overflow-hidden">
 
     <div class="p-8 overflow-y-auto scroll-content">
@@ -166,108 +168,12 @@
             <div class="text-center mt-6 pt-6 border-t border-gray-600">
                 <p class="text-gray-400 text-sm">
                     Đã có tài khoản?
-                    <a href="${pageContext.request.contextPath}/views/auth/login.jsp"
-                       class="text-gold font-medium hover:underline">Đăng nhập</a>
+                    <a href="login" class="text-gold font-medium hover:underline">Đăng nhập</a>
                 </p>
             </div>
         </form>
     </div>
 </div>
-
-<script>
-    function togglePassword(inputId, icon) {
-        const input = document.getElementById(inputId);
-
-        if (input.type === 'password') {
-            input.type = 'text';
-            icon.classList.remove('fa-eye');
-            icon.classList.add('fa-eye-slash');
-        } else {
-            input.type = 'password';
-            icon.classList.remove('fa-eye-slash');
-            icon.classList.add('fa-eye');
-        }
-    }
-
-    // Form validation
-    document.getElementById('registerForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        clearErrors();
-
-        let isValid = true;
-
-        const fullName = document.getElementById('fullName');
-        if (fullName.value.trim() === '') {
-            showError('fullName', 'Vui lòng nhập họ và tên');
-            isValid = false;
-        }
-
-        const email = document.getElementById('email');
-        if (email.value.trim() === '') {
-            showError('email', 'Vui lòng nhập email hoặc số điện thoại');
-            isValid = false;
-        } else if (!isValidEmail(email.value) && !isValidPhone(email.value)) {
-            showError('email', 'Email hoặc số điện thoại không hợp lệ');
-            isValid = false;
-        }
-
-        const password = document.getElementById('password');
-        if (password.value.trim() === '') {
-            showError('password', 'Vui lòng nhập mật khẩu');
-            isValid = false;
-        } else if (password.value.length < 6) {
-            showError('password', 'Mật khẩu phải có ít nhất 6 ký tự');
-            isValid = false;
-        }
-
-        const confirmPassword = document.getElementById('confirmPassword');
-        if (confirmPassword.value.trim() === '') {
-            showError('confirmPassword', 'Vui lòng xác nhận mật khẩu');
-            isValid = false;
-        } else if (password.value !== confirmPassword.value) {
-            showError('confirmPassword', 'Mật khẩu không khớp');
-            isValid = false;
-        }
-
-        if (isValid) {
-            this.submit();
-        }
-    });
-
-    function showError(fieldId, message) {
-        const input = document.getElementById(fieldId);
-        const errorSpan = document.getElementById(fieldId + 'Error');
-
-        input.classList.add('error', '!border-red-500');
-        errorSpan.textContent = message;
-    }
-
-    function clearErrors() {
-        const inputs = document.querySelectorAll('.input-field');
-        const errors = document.querySelectorAll('[id$="Error"]');
-
-        inputs.forEach(input => {
-            input.classList.remove('error', '!border-red-500');
-        });
-        errors.forEach(error => error.textContent = '');
-    }
-
-    function isValidEmail(email) {
-        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    }
-
-    function isValidPhone(phone) {
-        return /^[0-9]{10,11}$/.test(phone);
-    }
-
-    // Clear error when user starts typing
-    document.querySelectorAll('.input-field').forEach(input => {
-        input.addEventListener('input', function() {
-            this.classList.remove('error', '!border-red-500');
-            document.getElementById(this.id + 'Error').textContent = '';
-        });
-    });
-</script>
 
 </body>
 </html>

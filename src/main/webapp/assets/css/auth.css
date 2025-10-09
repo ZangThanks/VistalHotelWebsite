@@ -51,3 +51,59 @@ input:focus {
     background: rgba(212, 175, 106, 0.2);
     border-radius: 10px;
 }
+
+
+/* Smooth transitions for form switching */
+.form-container {
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.form-container.hidden {
+    opacity: 0;
+    transform: scale(0.95);
+    position: absolute;
+    pointer-events: none;
+}
+
+/* Back button styles */
+.back-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: transparent;
+    border: 1px solid rgba(212, 175, 106, 0.3);
+    border-radius: 12px;
+    color: #d4af6a;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.back-button:hover {
+    background: rgba(212, 175, 106, 0.1);
+    border-color: #d4af6a;
+    transform: translateX(-4px);
+}
+
+.back-button i {
+    transition: transform 0.3s ease;
+}
+
+.back-button:hover i {
+    transform: translateX(-4px);
+}
+
+
+/*Input Error Animation*/
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-6px); }
+    40%, 80% { transform: translateX(6px); }
+}
+
+.input-field.error {
+    animation: shake 0.3s ease-in-out;
+    border-color: #f87171 !important; 
+}

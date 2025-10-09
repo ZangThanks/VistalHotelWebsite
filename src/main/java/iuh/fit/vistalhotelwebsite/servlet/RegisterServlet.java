@@ -4,7 +4,9 @@ import iuh.fit.vistalhotelwebsite.dao.CustomerDAO;
 import iuh.fit.vistalhotelwebsite.model.Customer;
 import iuh.fit.vistalhotelwebsite.model.enums.MemberShipLevel;
 import iuh.fit.vistalhotelwebsite.model.enums.UserRole;
+import iuh.fit.vistalhotelwebsite.util.GenerateIDUtil;
 import iuh.fit.vistalhotelwebsite.util.PasswordUtil;
+import iuh.fit.vistalhotelwebsite.util.ValidationUtil;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -18,9 +20,12 @@ import java.util.UUID;
 
 @WebServlet("/register")
 public class RegisterServlet extends HttpServlet {
+
+    private CustomerDAO customerDAO;
+
     @Override
     public void init(ServletConfig config) throws ServletException {
-        super.init(config);
+        customerDAO = new CustomerDAO();
     }
 
     @Override
@@ -37,20 +42,24 @@ public class RegisterServlet extends HttpServlet {
         String password = req.getParameter("password");
         String confirmPassword = req.getParameter("confirmPassword");
 
-        if (isNullOrEmpty(fullName) || isNullOrEmpty(emailOrPhone) || isNullOrEmpty(password) || isNullOrEmpty(confirmPassword)) {
+        if (ValidationUtil.isNullOrEmpty(fullName) || ValidationUtil.isNullOrEmpty(emailOrPhone) || ValidationUtil.isNullOrEmpty(password) || ValidationUtil.isNullOrEmpty(confirmPassword)) {
             forwardError(req, resp, "Vui lòng điền đầy đủ thông tin");
             return;
         }
 
-        if (!password.equals(confirmPassword)) {
-            forwardError(req, resp, "Mật khẩu xác nhận không khớp");
+        String email = ValidationUtil.isValidEmail(emailOrPhone) ? emailOrPhone : null;
+        String phone = email == null ? emailOrPhone : null;
+
+        if (email != null && !ValidationUtil.isValidEmail(email)) {
+            forwardError(req, resp, "Email không hợp lệ! (vd: example@domain.com)");
             return;
         }
 
-        String email = isEmail(emailOrPhone) ? emailOrPhone : null;
-        String phone = email == null ? emailOrPhone : null;
+        if (phone != null && !ValidationUtil.isValidPhone(phone)) {
+            forwardError(req, resp, "Số điện thoại không hợp lệ! (9-12 chữ số)");
+            return;
+        }
 
-        CustomerDAO customerDAO = new CustomerDAO();
         if (email != null && customerDAO.findByEmail(email) != null) {
             forwardError(req, resp, "Email đã được sử dụng");
             return;
@@ -60,8 +69,17 @@ public class RegisterServlet extends HttpServlet {
             return;
         }
 
+        if (!ValidationUtil.isValidPassword(password)) {
+            forwardError(req, resp, "Mật khẩu phải có ít nhất 8 ký tự bao gồm chữ hoa, chữ thường số và ký tự đặc biệt!");
+        }
+
+        if (!password.equals(confirmPassword)) {
+            forwardError(req, resp, "Mật khẩu xác nhận không khớp");
+            return;
+        }
+
         Customer customer = new Customer();
-        customer.setId(generateId("CUS"));
+        customer.setId(GenerateIDUtil.generateId("C", 8));
         customer.setUserName(email != null ? email : phone);
         customer.setFullName(fullName);
         customer.setEmail(email);
@@ -83,20 +101,8 @@ public class RegisterServlet extends HttpServlet {
         resp.sendRedirect(req.getContextPath() + "/login?registered=1");
     }
 
-    private boolean isNullOrEmpty(String s) {
-        return s == null || s.trim().isEmpty();
-    }
-
-    private boolean isEmail(String input) {
-        return input != null && input.matches("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$");
-    }
-
     private void forwardError(HttpServletRequest req, HttpServletResponse resp, String message) throws ServletException, IOException {
         req.setAttribute("error", message);
         req.getRequestDispatcher("views/auth/register.jsp").forward(req, resp);
-    }
-
-    private String generateId(String prefix) {
-        return prefix + UUID.randomUUID().toString().replace("-", "").substring(0, 8).toUpperCase();
     }
 }
