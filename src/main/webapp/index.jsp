@@ -12,6 +12,6 @@
 <%--    <jsp:param name="active" value="dashboard" />--%>
 <%--</jsp:include>--%>
 
-<%@include file="views/layout/header.jsp" %>
+<%@include file="views/component/header.jsp" %>
 </body>
 </html>
