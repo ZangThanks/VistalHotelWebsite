@@ -15,8 +15,8 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.UUID;
 
-@WebServlet("/google-callback")
-public class GoogleCallbackServlet extends HttpServlet {
+@WebServlet("/facebook-callback")
+public class FacebookCallbackServlet extends HttpServlet {
     private CustomerDAO customerDAO;
     @Override public void init() { customerDAO = new CustomerDAO(); }
 
@@ -27,30 +27,28 @@ public class GoogleCallbackServlet extends HttpServlet {
         String state = req.getParameter("state");
 
         if (error != null) { resp.sendRedirect(req.getContextPath()+"/login?error=access_denied"); return; }
-        if (!OAuthUtil.validateState(session, "oauth_google_state", state)) {
+        if (!OAuthUtil.validateState(session, "oauth_fb_state", state)) {
             resp.sendRedirect(req.getContextPath()+"/login?error=invalid_state"); return;
         }
         if (code == null || code.isBlank()) { resp.sendRedirect(req.getContextPath()+"/login?error=invalid_code"); return; }
 
         try {
-            String verifier = (String) session.getAttribute("google_code_verifier");
-            JsonObject tokens = OAuthUtil.getGoogleTokens(code, verifier);
+            JsonObject tokens = OAuthUtil.getFacebookTokens(code);
             String accessToken = tokens.has("access_token") ? tokens.get("access_token").getAsString() : null;
             if (accessToken == null) { resp.sendRedirect(req.getContextPath()+"/login?error=token_error"); return; }
 
-            Map<String,String> u = OAuthUtil.getGoogleUserInfo(accessToken);
+            Map<String,String> u = OAuthUtil.getFacebookUserInfo(accessToken);
             String email = u.get("email");
             String name  = u.get("name");
-            String sub   = u.get("sub");
-
-            if (email == null || email.isBlank()) email = "gg_"+(sub!=null?sub:UUID.randomUUID())+"@vista.local";
+            String fid   = u.get("id");
+            if (email == null || email.isBlank()) email = "fb_"+fid+"@vista.local";
 
             Customer c = customerDAO.findByEmail(email);
             if (c == null) {
                 c = new Customer();
                 c.setId(GenerateIDUtil.generateId("C", 8));
                 c.setUserName(email);
-                c.setFullName(name != null ? name : "Google User");
+                c.setFullName(name != null ? name : "Facebook User");
                 c.setEmail(email);
                 c.setPassword(PasswordUtil.hashPassword(UUID.randomUUID().toString()));
                 c.setUserRole(UserRole.CUSTOMER);
@@ -60,7 +58,7 @@ public class GoogleCallbackServlet extends HttpServlet {
 
             session.setAttribute("currentUser", c);
             session.setAttribute("role", UserRole.CUSTOMER);
-            session.setAttribute("loginMethod", "google");
+            session.setAttribute("loginMethod", "facebook");
             resp.sendRedirect(req.getContextPath()+"/views/customer/home.jsp");
         } catch (Exception ex) {
             ex.printStackTrace();

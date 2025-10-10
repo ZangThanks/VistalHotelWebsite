@@ -3,158 +3,159 @@ package iuh.fit.vistalhotelwebsite.util;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import iuh.fit.vistalhotelwebsite.config.OAuthConfig;
+import jakarta.servlet.http.HttpSession;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 
+
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.Map;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.util.*;
 
 public class OAuthUtil {
-
     private static final Gson gson = new Gson();
 
-    // GOOGLE OAuth
-    // Generate Google OAuth URL
-    public static String getGoogleAuthorizationUrl() {
+    // Common helpers
+    public static String randomState(HttpSession session, String key) {
+        String s = UUID.randomUUID().toString();
+        session.setAttribute(key, s);
+        return s;
+    }
+    public static boolean validateState(HttpSession session, String key, String incoming) {
+        Object saved = session.getAttribute(key);
+        session.removeAttribute(key);
+        return saved != null && saved.equals(incoming);
+    }
+    private static String base64Url(byte[] bytes) {
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
+    }
+    public static String codeChallengeS256(String verifier) {
         try {
-            URIBuilder builder = new URIBuilder(OAuthConfig.GOOGLE_AUTHORIZATION_URL);
-            builder.addParameter("client_id", OAuthConfig.GOOGLE_CLIENT_ID);
-            builder.addParameter("redirect_uri", OAuthConfig.GOOGLE_REDIRECT_URI);
-            builder.addParameter("response_type", "code");
-            builder.addParameter("scope", OAuthConfig.GOOGLE_SCOPE);
-            builder.addParameter("access_type", "offline");
-            builder.addParameter("prompt", "consent");
-            return builder.build().toString();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-            return null;
-        }
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            return base64Url(md.digest(verifier.getBytes(StandardCharsets.US_ASCII)));
+        } catch (Exception e) { return null; }
     }
 
-    // Exchange authorization code for access token (Google)
-    public static String getGoogleAccessToken(String code) throws IOException {
+    // Google
+    public static String getGoogleAuthorizationUrl(HttpSession session, String codeChallenge) {
+        try {
+            URIBuilder b = new URIBuilder(OAuthConfig.GOOGLE_AUTH_URL());
+            b.addParameter("client_id", OAuthConfig.GOOGLE_CLIENT_ID());
+            b.addParameter("redirect_uri", OAuthConfig.GOOGLE_REDIRECT_URI());
+            b.addParameter("response_type", "code");
+            b.addParameter("scope", OAuthConfig.GOOGLE_SCOPE());
+            b.addParameter("access_type", "offline");
+            b.addParameter("prompt", "consent");
+            b.addParameter("state", randomState(session, "oauth_google_state"));
+            if (codeChallenge != null) {
+                b.addParameter("code_challenge", codeChallenge);
+                b.addParameter("code_challenge_method", "S256");
+            }
+            return b.build().toString();
+        } catch (Exception e) { return null; }
+    }
+
+    public static JsonObject getGoogleTokens(String code, String codeVerifier) throws IOException {
         try (CloseableHttpClient client = HttpClients.createDefault()) {
-            HttpPost post = new HttpPost(OAuthConfig.GOOGLE_TOKEN_URL);
-
-            Map<String, String> params = new HashMap<>();
-            params.put("code", code);
-            params.put("client_id", OAuthConfig.GOOGLE_CLIENT_ID);
-            params.put("client_secret", OAuthConfig.GOOGLE_CLIENT_SECRET);
-            params.put("redirect_uri", OAuthConfig.GOOGLE_REDIRECT_URI);
-            params.put("grant_type", "authorization_code");
-
-            String json = gson.toJson(params);
-            post.setEntity(new StringEntity(json));
-            post.setHeader("Content-Type", "application/json");
-
-            HttpResponse response = client.execute(post);
-            String responseBody = EntityUtils.toString(response.getEntity());
-            JsonObject jsonObject = gson.fromJson(responseBody, JsonObject.class);
-
-            return jsonObject.has("access_token") ? jsonObject.get("access_token").getAsString() : null;
+            HttpPost post = new HttpPost(OAuthConfig.GOOGLE_TOKEN_URL());
+            List<BasicNameValuePair> form = new ArrayList<>();
+            form.add(new BasicNameValuePair("code", code));
+            form.add(new BasicNameValuePair("client_id", OAuthConfig.GOOGLE_CLIENT_ID()));
+            form.add(new BasicNameValuePair("client_secret", OAuthConfig.GOOGLE_CLIENT_SECRET()));
+            form.add(new BasicNameValuePair("redirect_uri", OAuthConfig.GOOGLE_REDIRECT_URI()));
+            form.add(new BasicNameValuePair("grant_type", "authorization_code"));
+            if (codeVerifier != null) form.add(new BasicNameValuePair("code_verifier", codeVerifier));
+            post.setEntity(new UrlEncodedFormEntity(form, StandardCharsets.UTF_8));
+            HttpResponse res = client.execute(post);
+            return gson.fromJson(EntityUtils.toString(res.getEntity()), JsonObject.class);
         }
     }
 
-    // Get user info from Google
     public static Map<String, String> getGoogleUserInfo(String accessToken) throws IOException {
         try (CloseableHttpClient client = HttpClients.createDefault()) {
-            URIBuilder builder = new URIBuilder(OAuthConfig.GOOGLE_USER_INFO_URL);
-            builder.addParameter("access_token", accessToken);
-
-            HttpGet get = new HttpGet(builder.build());
-            HttpResponse response = client.execute(get);
-            String responseBody = EntityUtils.toString(response.getEntity());
-
-            JsonObject userInfo = gson.fromJson(responseBody, JsonObject.class);
-
-            Map<String, String> userData = new HashMap<>();
-            userData.put("id", userInfo.has("id") ? userInfo.get("id").getAsString() : null);
-            userData.put("email", userInfo.has("email") ? userInfo.get("email").getAsString() : null);
-            userData.put("name", userInfo.has("name") ? userInfo.get("name").getAsString() : null);
-            userData.put("picture", userInfo.has("picture") ? userInfo.get("picture").getAsString() : null);
-            userData.put("verified_email", userInfo.has("verified_email") ? userInfo.get("verified_email").getAsString() : "false");
-
-            return userData;
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-            return null;
+            HttpGet get = new HttpGet(OAuthConfig.GOOGLE_USERINFO_URL());
+            get.setHeader("Authorization", "Bearer " + accessToken);
+            HttpResponse res = client.execute(get);
+            JsonObject u = gson.fromJson(EntityUtils.toString(res.getEntity()), JsonObject.class);
+            Map<String,String> data = new HashMap<>();
+            data.put("sub", u.has("sub") ? u.get("sub").getAsString() : null);
+            data.put("email", u.has("email") ? u.get("email").getAsString() : null);
+            data.put("name", u.has("name") ? u.get("name").getAsString() : null);
+            data.put("picture", u.has("picture") ? u.get("picture").getAsString() : null);
+            data.put("email_verified", u.has("email_verified") ? String.valueOf(u.get("email_verified").getAsBoolean()) : null);
+            return data;
         }
     }
 
-    // FACEBOOK OAuth
-    // Generate Facebook OAuth URL
-    public static String getFacebookAuthorizationUrl() {
+    // Facebook
+    public static String getFacebookAuthorizationUrl(HttpSession session) {
         try {
-            URIBuilder builder = new URIBuilder(OAuthConfig.FACEBOOK_AUTHORIZATION_URL);
-            builder.addParameter("client_id", OAuthConfig.FACEBOOK_APP_ID);
-            builder.addParameter("redirect_uri", OAuthConfig.FACEBOOK_REDIRECT_URI);
-            builder.addParameter("scope", OAuthConfig.FACEBOOK_SCOPE);
-            builder.addParameter("response_type", "code");
-            return builder.build().toString();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-            return null;
-        }
+            URIBuilder b = new URIBuilder(OAuthConfig.FB_AUTH_URL());
+            b.addParameter("client_id", OAuthConfig.FB_APP_ID());
+            b.addParameter("redirect_uri", OAuthConfig.FB_REDIRECT_URI());
+            b.addParameter("scope", OAuthConfig.FB_SCOPE());
+            b.addParameter("response_type", "code");
+            b.addParameter("state", randomState(session, "oauth_fb_state"));
+            return b.build().toString();
+        } catch (Exception e) { return null; }
     }
 
-    // Exchange authorization code for access token (Facebook)
-    public static String getFacebookAccessToken(String code) throws IOException {
+    public static JsonObject getFacebookTokens(String code) throws IOException {
         try (CloseableHttpClient client = HttpClients.createDefault()) {
-            URIBuilder builder = new URIBuilder(OAuthConfig.FACEBOOK_TOKEN_URL);
-            builder.addParameter("client_id", OAuthConfig.FACEBOOK_APP_ID);
-            builder.addParameter("client_secret", OAuthConfig.FACEBOOK_APP_SECRET);
-            builder.addParameter("redirect_uri", OAuthConfig.FACEBOOK_REDIRECT_URI);
-            builder.addParameter("code", code);
-
-            HttpGet get = new HttpGet(builder.build());
-            HttpResponse response = client.execute(get);
-            String responseBody = EntityUtils.toString(response.getEntity());
-
-            JsonObject jsonObject = gson.fromJson(responseBody, JsonObject.class);
-            return jsonObject.has("access_token") ? jsonObject.get("access_token").getAsString() : null;
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-            return null;
-        }
+            URIBuilder b = new URIBuilder(OAuthConfig.FB_TOKEN_URL());
+            b.addParameter("client_id", OAuthConfig.FB_APP_ID());
+            b.addParameter("client_secret", OAuthConfig.FB_APP_SECRET());
+            b.addParameter("redirect_uri", OAuthConfig.FB_REDIRECT_URI());
+            b.addParameter("code", code);
+            HttpResponse res = client.execute(new HttpGet(b.build()));
+            return gson.fromJson(EntityUtils.toString(res.getEntity()), JsonObject.class);
+        } catch (URISyntaxException e) { throw new IOException(e); }
     }
 
-    // Get user info from Facebook
+    private static String appsecretProof(String accessToken) {
+        try {
+            Mac hmac = Mac.getInstance("HmacSHA256");
+            hmac.init(new SecretKeySpec(OAuthConfig.FB_APP_SECRET().getBytes(StandardCharsets.UTF_8), "HmacSHA256"));
+            byte[] raw = hmac.doFinal(accessToken.getBytes(StandardCharsets.UTF_8));
+            StringBuilder sb = new StringBuilder();
+            for (byte b : raw) sb.append(String.format("%02x", b));
+            return sb.toString();
+        } catch (Exception e) { return null; }
+    }
+
     public static Map<String, String> getFacebookUserInfo(String accessToken) throws IOException {
         try (CloseableHttpClient client = HttpClients.createDefault()) {
-            URIBuilder builder = new URIBuilder(OAuthConfig.FACEBOOK_USER_INFO_URL);
-            builder.addParameter("fields", "id,name,email,picture");
-            builder.addParameter("access_token", accessToken);
+            URIBuilder b = new URIBuilder(OAuthConfig.FB_USERINFO_URL());
+            b.addParameter("fields", "id,name,email,picture.type(large)");
+            b.addParameter("access_token", accessToken);
+            String proof = appsecretProof(accessToken);
+            if (proof != null) b.addParameter("appsecret_proof", proof);
+            HttpResponse res = client.execute(new HttpGet(b.build()));
+            JsonObject u = gson.fromJson(EntityUtils.toString(res.getEntity()), JsonObject.class);
 
-            HttpGet get = new HttpGet(builder.build());
-            HttpResponse response = client.execute(get);
-            String responseBody = EntityUtils.toString(response.getEntity());
-
-            JsonObject userInfo = gson.fromJson(responseBody, JsonObject.class);
-
-            Map<String, String> userData = new HashMap<>();
-            userData.put("id", userInfo.has("id") ? userInfo.get("id").getAsString() : null);
-            userData.put("email", userInfo.has("email") ? userInfo.get("email").getAsString() : null);
-            userData.put("name", userInfo.has("name") ? userInfo.get("name").getAsString() : null);
-
-            if (userInfo.has("picture") && userInfo.get("picture").isJsonObject()) {
-                JsonObject pictureObj = userInfo.getAsJsonObject("picture");
-                if (pictureObj.has("data") && pictureObj.getAsJsonObject("data").has("url")) {
-                    userData.put("picture", pictureObj.getAsJsonObject("data").get("url").getAsString());
+            Map<String,String> data = new HashMap<>();
+            data.put("id", u.has("id") ? u.get("id").getAsString() : null);
+            data.put("email", u.has("email") ? u.get("email").getAsString() : null);
+            data.put("name", u.has("name") ? u.get("name").getAsString() : null);
+            if (u.has("picture") && u.get("picture").isJsonObject()) {
+                JsonObject pic = u.getAsJsonObject("picture");
+                if (pic.has("data") && pic.getAsJsonObject("data").has("url")) {
+                    data.put("picture", pic.getAsJsonObject("data").get("url").getAsString());
                 }
             }
-
-            return userData;
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-            return null;
-        }
+            return data;
+        } catch (URISyntaxException e) { throw new IOException(e); }
     }
 }

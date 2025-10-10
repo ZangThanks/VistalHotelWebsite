@@ -4,16 +4,12 @@ import iuh.fit.vistalhotelwebsite.util.OAuthUtil;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import java.io.IOException;
-import java.util.UUID;
 
-@WebServlet("/google-login")
-public class GoogleLoginServlet extends HttpServlet {
+@WebServlet("/facebook-login")
+public class FacebookLoginServlet extends HttpServlet {
     @Override protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         HttpSession session = req.getSession(true);
-        String codeVerifier = UUID.randomUUID().toString().replace("-", "");
-        session.setAttribute("google_code_verifier", codeVerifier);
-        String codeChallenge = OAuthUtil.codeChallengeS256(codeVerifier); // PKCE
-        String url = OAuthUtil.getGoogleAuthorizationUrl(session, codeChallenge);
+        String url = OAuthUtil.getFacebookAuthorizationUrl(session);
         resp.sendRedirect(url != null ? url : req.getContextPath()+"/login?error=oauth_config_error");
     }
 }

@@ -12,6 +12,7 @@
     <meta charset="UTF-8">
     <title>Quên mật khẩu | Vista Hotel</title>
     <link href="assets/css/tailwind.output.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="icon" type="image/png" href="${pageContext.request.contextPath}/assets/images/logo.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/auth.css">
