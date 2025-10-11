@@ -2,6 +2,7 @@ package iuh.fit.vistalhotelwebsite.servlet;
 
 import iuh.fit.vistalhotelwebsite.dao.*;
 import iuh.fit.vistalhotelwebsite.model.*;
+import iuh.fit.vistalhotelwebsite.service.NotifierService;
 import iuh.fit.vistalhotelwebsite.util.PasswordUtil;
 import iuh.fit.vistalhotelwebsite.util.ValidationUtil;
 import jakarta.servlet.ServletException;
@@ -16,12 +17,14 @@ public class ResetPasswordServlet extends HttpServlet {
     private AdminDAO adminDAO;
     private EmployeeDAO employeeDAO;
     private CustomerDAO customerDAO;
+    private NotifierService notifier;
 
     @Override
     public void init() throws ServletException {
         adminDAO = new AdminDAO();
         employeeDAO = new EmployeeDAO();
         customerDAO = new CustomerDAO();
+        notifier = (NotifierService) getServletContext().getAttribute("notifier");
     }
 
     @Override
@@ -76,6 +79,9 @@ public class ResetPasswordServlet extends HttpServlet {
             forwardError(req, resp, "Cập nhật mật khẩu thất bại. Vui lòng thử lại.");
             return;
         }
+
+        // Thông báo đổi mật khẩu
+        if (notifier != null) notifier.notifyPasswordChanged(user);
 
         // Clear session and redirect
         session.invalidate();

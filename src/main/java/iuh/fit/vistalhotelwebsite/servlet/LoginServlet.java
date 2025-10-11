@@ -8,6 +8,8 @@ import iuh.fit.vistalhotelwebsite.model.Customer;
 import iuh.fit.vistalhotelwebsite.model.Employee;
 import iuh.fit.vistalhotelwebsite.model.User;
 import iuh.fit.vistalhotelwebsite.model.enums.UserRole;
+import iuh.fit.vistalhotelwebsite.service.NotifierService;
+import iuh.fit.vistalhotelwebsite.service.impl.NotifierServiceImpl;
 import iuh.fit.vistalhotelwebsite.util.PasswordUtil;
 import iuh.fit.vistalhotelwebsite.util.ValidationUtil;
 import jakarta.servlet.ServletConfig;
@@ -26,12 +28,14 @@ public class LoginServlet extends HttpServlet {
     private AdminDAO adminDAO;
     private EmployeeDAO employeeDAO;
     private CustomerDAO customerDAO;
+    private NotifierService notifier;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         adminDAO = new AdminDAO();
         employeeDAO = new EmployeeDAO();
         customerDAO = new CustomerDAO();
+        notifier = (NotifierService) config.getServletContext().getAttribute("notifier");
     }
 
     @Override
@@ -73,6 +77,9 @@ public class LoginServlet extends HttpServlet {
         HttpSession session = req.getSession(true);
         session.setAttribute("currentUser", foundUser);
         session.setAttribute("role", foundUser.getUserRole());
+
+        // Gửi thông báo “chào mừng trở lại” (không chặn luồng – email async)
+        if (notifier != null) notifier.sendWelcomeBack(foundUser);
 
         // Redirect by role
         UserRole role = foundUser.getUserRole();

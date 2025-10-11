@@ -1,12 +1,28 @@
-//  Description: Handles UI interactions and form behaviors for
-//  authentication pages (login, register, forgot, reset)
+/**
+ * Handles UI interactions and form behaviors for authentication pages
+ * (login, register, forgot password, verify code, reset password).
+ *
+ * @file auth.js
+ * @author Vista
+ * @description
+ *  - Quản lý hiển thị lỗi/clear lỗi theo input.
+ *  - Đếm ngược thời gian hiệu lực mã xác nhận.
+ *  - Ràng buộc/validate client-side cho các form.
+ */
 
-// Timer for verification code
+/** @type {number | undefined} - ID của interval đếm ngược hiện tại. */
 let timerInterval;
 
-// Start countdown for verification code (default: 120 seconds)
-function startTimer() {
-    let timeLeft = 120; // 2 minutes
+/**
+ * Bắt đầu bộ đếm ngược cho mã xác nhận (mặc định 120 giây).
+ * Tự cập nhật text của phần tử có id `timer`. Khi hết thời gian,
+ * dừng interval và tô đỏ thông báo.
+ *
+ * @param {number} [seconds=120] - Số giây đếm ngược.
+ * @returns {void}
+ */
+function startTimer(seconds = 120) {
+    let timeLeft = seconds;
     const timer = document.getElementById("timer");
     if (!timer) return;
 
@@ -15,8 +31,8 @@ function startTimer() {
 
     timerInterval = setInterval(() => {
         const minutes = Math.floor(timeLeft / 60);
-        const seconds = String(timeLeft % 60).padStart(2, "0");
-        timer.textContent = `Thời gian còn lại: ${minutes}:${seconds}s`;
+        const sec = String(timeLeft % 60).padStart(2, "0");
+        timer.textContent = `Thời gian còn lại: ${minutes}:${sec}s`;
 
         if (timeLeft-- <= 0) {
             clearInterval(timerInterval);
@@ -26,14 +42,23 @@ function startTimer() {
     }, 1000);
 }
 
-// Stop countdown timer
+/**
+ * Dừng bộ đếm ngược hiện tại (nếu có).
+ * @returns {void}
+ */
 function clearTimer() {
     if (timerInterval) clearInterval(timerInterval);
 }
 
-// UI Error Handling
-// - ID of the input field
-// - Error message
+/**
+ * Hiển thị lỗi cho một input cụ thể:
+ * - Thêm class border đỏ và animation “rung” ngắn.
+ * - Gán message vào `<span id="${fieldId}Error">`.
+ *
+ * @param {string} fieldId - id của input.
+ * @param {string} message - thông điệp lỗi cần hiển thị.
+ * @returns {void}
+ */
 function showError(fieldId, message) {
     const input = document.getElementById(fieldId);
     const errorSpan = document.getElementById(fieldId + "Error");
@@ -43,22 +68,36 @@ function showError(fieldId, message) {
 
         // Restart shake animation
         input.style.animation = "none";
-        input.offsetHeight; // force reflow
+        // Force reflow để reset animation
+        // eslint-disable-next-line no-unused-expressions
+        input.offsetHeight;
         input.style.animation = null;
     }
 
     if (errorSpan) errorSpan.textContent = message;
 }
 
-// Clear all error messages and borders
+/**
+ * Xóa toàn bộ thông báo lỗi & viền lỗi trên form hiện tại.
+ * (Áp dụng cho các input có class `.input-field` và các span có id kết thúc bằng `Error`.)
+ * @returns {void}
+ */
 function clearErrors() {
-    document.querySelectorAll(".input-field").forEach((i) =>
-        i.classList.remove("error", "!border-red-500")
-    );
-    document.querySelectorAll('[id$="Error"]').forEach((e) => (e.textContent = ""));
+    document
+        .querySelectorAll(".input-field")
+        .forEach((i) => i.classList.remove("error", "!border-red-500"));
+    document
+        .querySelectorAll('[id$="Error"]')
+        .forEach((e) => (e.textContent = ""));
 }
 
-// Password visibility toggle
+/**
+ * Bật/tắt hiển thị mật khẩu của một input.
+ *
+ * @param {string} inputId - id của input type password cần toggle.
+ * @param {HTMLElement} icon - phần tử icon (FontAwesome) để đổi class con mắt.
+ * @returns {void}
+ */
 function togglePassword(inputId, icon) {
     const input = document.getElementById(inputId);
     if (!input) return;
@@ -69,17 +108,24 @@ function togglePassword(inputId, icon) {
     icon.classList.toggle("fa-eye-slash");
 }
 
-// Form Validators
+/**
+ * Gắn listeners validate & submit cho tất cả form trên trang auth.
+ * Sử dụng các hàm validation toàn cục được export bởi `validation.js`:
+ *  - isEmpty, isEmailOrPhone, isValidPassword, isPasswordMatch
+ *
+ * @returns {void}
+ */
 function initializeFormListeners() {
-    // Login Form
+    // ===== Login Form =====
+    /** @type {HTMLFormElement | null} */
     const loginForm = document.getElementById("loginForm");
     if (loginForm) {
         loginForm.addEventListener("submit", (e) => {
             clearErrors();
             let valid = true;
 
-            const email = document.getElementById("email");
-            const password = document.getElementById("password");
+            const email = /** @type {HTMLInputElement} */ (document.getElementById("email"));
+            const password = /** @type {HTMLInputElement} */ (document.getElementById("password"));
 
             if (isEmpty(email.value)) {
                 showError("email", "Vui lòng nhập email hoặc số điện thoại");
@@ -98,17 +144,18 @@ function initializeFormListeners() {
         });
     }
 
-    // Register Form
+    // ===== Register Form =====
+    /** @type {HTMLFormElement | null} */
     const registerForm = document.getElementById("registerForm");
     if (registerForm) {
         registerForm.addEventListener("submit", (e) => {
             clearErrors();
             let valid = true;
 
-            const fullName = document.getElementById("fullName");
-            const email = document.getElementById("email");
-            const password = document.getElementById("password");
-            const confirmPassword = document.getElementById("confirmPassword");
+            const fullName = /** @type {HTMLInputElement} */ (document.getElementById("fullName"));
+            const email = /** @type {HTMLInputElement} */ (document.getElementById("email"));
+            const password = /** @type {HTMLInputElement} */ (document.getElementById("password"));
+            const confirmPassword = /** @type {HTMLInputElement} */ (document.getElementById("confirmPassword"));
 
             if (isEmpty(fullName.value)) {
                 showError("fullName", "Vui lòng nhập họ và tên");
@@ -146,15 +193,16 @@ function initializeFormListeners() {
         });
     }
 
-    // Forgot Password Form
+    // ===== Forgot Password Form (Gửi mã) =====
+    /** @type {HTMLFormElement | null} */
     const forgotForm = document.getElementById("forgotForm");
     if (forgotForm) {
         forgotForm.addEventListener("submit", (e) => {
             clearErrors();
             let valid = true;
 
-            const emailOrPhone = document.getElementById("forgotEmail");
-            const recaptcha = document.getElementById("recaptcha");
+            const emailOrPhone = /** @type {HTMLInputElement} */ (document.getElementById("forgotEmail"));
+            const recaptcha = /** @type {HTMLInputElement | null} */ (document.getElementById("recaptcha"));
 
             if (isEmpty(emailOrPhone.value)) {
                 showError("forgotEmail", "Vui lòng nhập email hoặc số điện thoại");
@@ -173,12 +221,13 @@ function initializeFormListeners() {
         });
     }
 
-    // Verify Code Form
+    // ===== Verify Code Form =====
+    /** @type {HTMLFormElement | null} */
     const verifyForm = document.getElementById("verifyForm");
     if (verifyForm) {
         verifyForm.addEventListener("submit", (e) => {
             clearErrors();
-            const code = document.getElementById("confirmationCode");
+            const code = /** @type {HTMLInputElement} */ (document.getElementById("confirmationCode"));
 
             if (isEmpty(code.value)) {
                 e.preventDefault();
@@ -190,15 +239,16 @@ function initializeFormListeners() {
         });
     }
 
-    // Reset Password Form
+    // ===== Reset Password Form =====
+    /** @type {HTMLFormElement | null} */
     const resetForm = document.getElementById("resetForm");
     if (resetForm) {
         resetForm.addEventListener("submit", (e) => {
             clearErrors();
             let valid = true;
 
-            const newPw = document.getElementById("newPassword");
-            const confirmPw = document.getElementById("confirmPassword");
+            const newPw = /** @type {HTMLInputElement} */ (document.getElementById("newPassword"));
+            const confirmPw = /** @type {HTMLInputElement} */ (document.getElementById("confirmPassword"));
 
             if (isEmpty(newPw.value)) {
                 showError("newPassword", "Vui lòng nhập mật khẩu mới");
@@ -223,7 +273,7 @@ function initializeFormListeners() {
         });
     }
 
-    // Clear errors when typing
+    // Clear lỗi khi người dùng gõ lại
     document.querySelectorAll(".input-field").forEach((input) => {
         input.addEventListener("input", () => {
             input.classList.remove("error", "!border-red-500");
@@ -233,7 +283,7 @@ function initializeFormListeners() {
     });
 }
 
-// Initialize on DOM Ready
+// Khởi tạo sau khi DOM sẵn sàng
 document.addEventListener("DOMContentLoaded", () => {
     initializeFormListeners();
 

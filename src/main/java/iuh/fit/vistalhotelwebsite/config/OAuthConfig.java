@@ -30,7 +30,7 @@ public class OAuthConfig {
     }
 
     // Prioritize: ENV -> -D system property -> web.xml -> oauth.properties -> default
-    private static String env(String key, String def) {
+    public static String env(String key, String def) {
         String v = System.getenv(key);
         if (v != null && !v.isBlank()) return v;
         v = System.getProperty(key); // support -DKEY=VALUE (Tomcat Monitor/IDE)

@@ -1,31 +1,44 @@
+/* ------------------------------------------------------------------
+ * Font: dùng Inter cho toàn bộ giao diện
+ * ------------------------------------------------------------------ */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
 
 body {
     font-family: 'Inter', sans-serif;
 }
 
+/* ------------------------------------------------------------------
+ * Floating label cho input:
+ * - Khi focus hoặc khi input có giá trị (không placeholder-shown)
+ *   thì label thu nhỏ và trôi lên trên
+ * ------------------------------------------------------------------ */
 .input-field:focus + .floating-label,
 .input-field:not(:placeholder-shown) + .floating-label {
-    transform: translateY(-1.75rem);
-    font-size: 0.75rem;
-    color: #d4af6a;
+    transform: translateY(-1.75rem); /* đẩy label lên trên */
+    font-size: 0.75rem;              /* thu nhỏ label */
+    color: #d4af6a;                  /* màu vàng (gold) chủ đạo */
 }
 
+/* Khi input bị lỗi, đổi màu label thành đỏ */
 .input-field.error + .floating-label {
     color: #ef4444;
 }
 
-/* Remove autofill background and styles */
+/* ------------------------------------------------------------------
+ * Loại bỏ nền vàng & style của trình duyệt khi autofill (Chrome)
+ * ------------------------------------------------------------------ */
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
-    -webkit-box-shadow: 0 0 0 30px transparent inset !important;
-    -webkit-text-fill-color: white !important;
-    transition: background-color 5000s ease-in-out 0s;
+    -webkit-box-shadow: 0 0 0 30px transparent inset !important; /* xóa nền autofill */
+    -webkit-text-fill-color: white !important;                    /* chữ màu trắng */
+    transition: background-color 5000s ease-in-out 0s;            /* hack để giữ nền trong suốt */
 }
 
-/* Force remove all borders and outlines */
+/* ------------------------------------------------------------------
+ * Reset giao diện mặc định của input (xoá viền/outline mặc định)
+ * ------------------------------------------------------------------ */
 input[type="text"],
 input[type="email"],
 input[type="password"] {
@@ -34,13 +47,17 @@ input[type="password"] {
     appearance: none;
 }
 
+/* Khi focus không tạo box-shadow mặc định của trình duyệt */
 input:focus {
     box-shadow: none !important;
 }
 
-/* Hide scrollbar but keep functionality */
+/* ------------------------------------------------------------------
+ * Tuỳ biến scrollbar cho khu vực có class .scroll-content
+ * (giữ chức năng cuộn nhưng ẩn/nhỏ gọn thanh cuộn)
+ * ------------------------------------------------------------------ */
 .scroll-content::-webkit-scrollbar {
-    width: 3px;
+    width: 3px; /* thanh cuộn rất mảnh */
 }
 
 .scroll-content::-webkit-scrollbar-track {
@@ -48,16 +65,18 @@ input:focus {
 }
 
 .scroll-content::-webkit-scrollbar-thumb {
-    background: rgba(212, 175, 106, 0.2);
+    background: rgba(212, 175, 106, 0.2); /* màu gold nhạt */
     border-radius: 10px;
 }
 
-
-/* Smooth transitions for form switching */
+/* ------------------------------------------------------------------
+ * Hiệu ứng chuyển cảnh mượt khi đổi form (login <-> register ...)
+ * ------------------------------------------------------------------ */
 .form-container {
     transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
 }
 
+/* Ẩn form hiện không dùng: làm mờ, scale nhẹ, vô hiệu pointer */
 .form-container.hidden {
     opacity: 0;
     transform: scale(0.95);
@@ -65,7 +84,9 @@ input:focus {
     pointer-events: none;
 }
 
-/* Back button styles */
+/* ------------------------------------------------------------------
+ * Nút quay lại (Back button) kiểu ghost với viền gold
+ * ------------------------------------------------------------------ */
 .back-button {
     display: inline-flex;
     align-items: center;
@@ -78,15 +99,17 @@ input:focus {
     font-size: 14px;
     font-weight: 500;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.3s ease; /* mượt khi hover */
 }
 
+/* Hover: đổi nền/viền và đẩy nhẹ sang trái */
 .back-button:hover {
     background: rgba(212, 175, 106, 0.1);
     border-color: #d4af6a;
     transform: translateX(-4px);
 }
 
+/* Icon mũi tên có animation riêng khi hover */
 .back-button i {
     transition: transform 0.3s ease;
 }
@@ -95,15 +118,17 @@ input:focus {
     transform: translateX(-4px);
 }
 
-
-/*Input Error Animation*/
+/* ------------------------------------------------------------------
+ * Hiệu ứng "rung" khi input lỗi
+ * ------------------------------------------------------------------ */
 @keyframes shake {
     0%, 100% { transform: translateX(0); }
     20%, 60% { transform: translateX(-6px); }
     40%, 80% { transform: translateX(6px); }
 }
 
+/* Áp hiệu ứng rung + viền đỏ cho input lỗi */
 .input-field.error {
     animation: shake 0.3s ease-in-out;
-    border-color: #f87171 !important; 
+    border-color: #f87171 !important; /* đỏ nhạt */
 }

@@ -4,6 +4,7 @@ import iuh.fit.vistalhotelwebsite.dao.CustomerDAO;
 import iuh.fit.vistalhotelwebsite.model.Customer;
 import iuh.fit.vistalhotelwebsite.model.enums.MemberShipLevel;
 import iuh.fit.vistalhotelwebsite.model.enums.UserRole;
+import iuh.fit.vistalhotelwebsite.service.NotifierService;
 import iuh.fit.vistalhotelwebsite.util.GenerateIDUtil;
 import iuh.fit.vistalhotelwebsite.util.PasswordUtil;
 import iuh.fit.vistalhotelwebsite.util.ValidationUtil;
@@ -22,10 +23,12 @@ import java.util.UUID;
 public class RegisterServlet extends HttpServlet {
 
     private CustomerDAO customerDAO;
+    private NotifierService notifier;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         customerDAO = new CustomerDAO();
+        notifier = (NotifierService) config.getServletContext().getAttribute("notifier");
     }
 
     @Override
@@ -60,13 +63,18 @@ public class RegisterServlet extends HttpServlet {
             return;
         }
 
-        if (email != null && customerDAO.findByEmail(email) != null) {
-            forwardError(req, resp, "Email đã được sử dụng");
-            return;
+        if (email != null) {
+            // Check email thật – theo EMAIL_CHECK_MODE
+            if (notifier != null && !notifier.verifyEmailExists(email)) {
+                forwardError(req, resp, "Email không tồn tại/không nhận thư.");
+                return;
+            }
+            if (customerDAO.findByEmail(email) != null) {
+                forwardError(req, resp, "Email đã được sử dụng"); return;
+            }
         }
         if (phone != null && customerDAO.findByPhone(phone) != null) {
-            forwardError(req, resp, "Số điện thoại đã được sử dụng");
-            return;
+            forwardError(req, resp, "Số điện thoại đã được sử dụng"); return;
         }
 
         if (!ValidationUtil.isValidPassword(password)) {
@@ -97,6 +105,9 @@ public class RegisterServlet extends HttpServlet {
             forwardError(req, resp, "Đăng ký thất bại. Vui lòng thử lại");
             return;
         }
+
+        // Gửi “chào mừng”
+        if (notifier != null) notifier.sendWelcome(customer);
 
         resp.sendRedirect(req.getContextPath() + "/login?registered=1");
     }

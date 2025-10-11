@@ -5,6 +5,7 @@ import iuh.fit.vistalhotelwebsite.dao.CustomerDAO;
 import iuh.fit.vistalhotelwebsite.model.Customer;
 import iuh.fit.vistalhotelwebsite.model.enums.MemberShipLevel;
 import iuh.fit.vistalhotelwebsite.model.enums.UserRole;
+import iuh.fit.vistalhotelwebsite.service.NotifierService;
 import iuh.fit.vistalhotelwebsite.util.GenerateIDUtil;
 import iuh.fit.vistalhotelwebsite.util.OAuthUtil;
 import iuh.fit.vistalhotelwebsite.util.PasswordUtil;
@@ -18,7 +19,12 @@ import java.util.UUID;
 @WebServlet("/facebook-callback")
 public class FacebookCallbackServlet extends HttpServlet {
     private CustomerDAO customerDAO;
-    @Override public void init() { customerDAO = new CustomerDAO(); }
+    private NotifierService notifier;
+
+    @Override public void init() {
+        customerDAO = new CustomerDAO();
+        notifier = (NotifierService) getServletContext().getAttribute("notifier");
+    }
 
     @Override protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         HttpSession session = req.getSession(true);
@@ -43,8 +49,11 @@ public class FacebookCallbackServlet extends HttpServlet {
             String fid   = u.get("id");
             if (email == null || email.isBlank()) email = "fb_"+fid+"@vista.local";
 
+            boolean isNew = false;
+
             Customer c = customerDAO.findByEmail(email);
             if (c == null) {
+                isNew = true;
                 c = new Customer();
                 c.setId(GenerateIDUtil.generateId("C", 8));
                 c.setUserName(email);
@@ -53,12 +62,22 @@ public class FacebookCallbackServlet extends HttpServlet {
                 c.setPassword(PasswordUtil.hashPassword(UUID.randomUUID().toString()));
                 c.setUserRole(UserRole.CUSTOMER);
                 c.setMemberShipLevel(MemberShipLevel.BRONZE);
-                if (!customerDAO.create(c)) { resp.sendRedirect(req.getContextPath()+"/login?error=registration_failed"); return; }
+                if (!customerDAO.create(c)) {
+                    resp.sendRedirect(req.getContextPath()+"/login?error=registration_failed");
+                    return;
+                }
             }
 
             session.setAttribute("currentUser", c);
             session.setAttribute("role", UserRole.CUSTOMER);
             session.setAttribute("loginMethod", "facebook");
+
+            // Gửi thông báo
+            if (notifier != null) {
+                if (isNew) notifier.sendWelcome(c);
+                else notifier.sendWelcomeBack(c);
+            }
+
             resp.sendRedirect(req.getContextPath()+"/views/customer/home.jsp");
         } catch (Exception ex) {
             ex.printStackTrace();

@@ -2,6 +2,7 @@ package iuh.fit.vistalhotelwebsite.servlet;
 
 import iuh.fit.vistalhotelwebsite.dao.*;
 import iuh.fit.vistalhotelwebsite.model.*;
+import iuh.fit.vistalhotelwebsite.service.NotifierService;
 import iuh.fit.vistalhotelwebsite.util.ValidationUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -16,12 +17,14 @@ public class ForgotPasswordServlet extends HttpServlet {
     private AdminDAO adminDAO;
     private EmployeeDAO employeeDAO;
     private CustomerDAO customerDAO;
+    private NotifierService notifier;
 
     @Override
     public void init() throws ServletException {
         adminDAO = new AdminDAO();
         employeeDAO = new EmployeeDAO();
         customerDAO = new CustomerDAO();
+        notifier = (NotifierService) getServletContext().getAttribute("notifier");
     }
 
     @Override
@@ -83,7 +86,13 @@ public class ForgotPasswordServlet extends HttpServlet {
         }
 
         // Generate 6-digit code
-        String code = String.format("%06d", new Random().nextInt(999999));
+//        String code = String.format("%06d", new Random().nextInt(999999));
+//        System.out.println("[DEBUG] Mã xác nhận gửi đến " + emailOrPhone + ": " + code);
+
+        // Phát OTP qua kênh người dùng nhập
+        String code = (notifier != null) ? notifier.sendOtp(foundUser, emailOrPhone)
+                : String.format("%06d", new java.util.Random().nextInt(999999));
+
         System.out.println("[DEBUG] Mã xác nhận gửi đến " + emailOrPhone + ": " + code);
 
         // Save to session
@@ -103,15 +112,16 @@ public class ForgotPasswordServlet extends HttpServlet {
             throws ServletException, IOException {
 
         String emailOrPhone = (String) session.getAttribute("verifyEmail");
-        User foundUser = (User) session.getAttribute("verifyUser");
+        User user = (User) session.getAttribute("verifyUser");
 
-        if (emailOrPhone == null || foundUser == null) {
+        if (emailOrPhone == null || user == null) {
             resp.sendRedirect(req.getContextPath() + "/forgot-password");
             return;
         }
 
         // Generate new code
-        String code = String.format("%06d", new Random().nextInt(999999));
+        String code = (notifier != null) ? notifier.sendOtp(user, emailOrPhone)
+                : String.format("%06d", new java.util.Random().nextInt(999999));
         System.out.println("[DEBUG] Mã xác nhận MỚI gửi đến " + emailOrPhone + ": " + code);
 
         // Update session
