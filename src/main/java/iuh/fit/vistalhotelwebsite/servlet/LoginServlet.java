@@ -79,7 +79,7 @@ public class LoginServlet extends HttpServlet {
         if (role == UserRole.ADMIN) {
             resp.sendRedirect(req.getContextPath() + "/views/admin/dashboard.jsp");
         } else if (role == UserRole.EMPLOYEE) {
-            resp.sendRedirect(req.getContextPath() + "/views/information/InfomationMagager.jsp");
+            resp.sendRedirect(req.getContextPath() + "/views/information/InformationManager.jsp");
         } else {
             resp.sendRedirect(req.getContextPath() + "/views/customer/home.jsp");
         }
