@@ -32,7 +32,7 @@ public class Room {
 
     @ToString.Exclude
     @ManyToOne
-    @JoinColumn(name = "room_number")
+    @JoinColumn(name = "room_type_id")
     private RoomType roomType;
 
     @ToString.Exclude
